@@ -1,0 +1,717 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="cocoapods,iOS,Xcode," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="今天在开发的过程中由于手贱将系统工程删了，然后再次重新git clone下拉工程并使用 cocoapods 进行对第三方库的安装，然而失败了。错误代码如下： 12Generating Pods project[1]    93845 abort      pod install 经过大佬的提醒，仔细看了下公司机子仍旧能够正确使用 cocoapods ，同时 cocoapods 也无法正确下拉我以前">
+<meta name="keywords" content="cocoapods,iOS,Xcode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用coocapods1.1.1无法成功创建pod工程文件的解决方法">
+<meta property="og:url" content="http://yoursite.com/2016/12/28/使用coocapods1-1-1无法成功创建pod工程文件的解决方法/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="今天在开发的过程中由于手贱将系统工程删了，然后再次重新git clone下拉工程并使用 cocoapods 进行对第三方库的安装，然而失败了。错误代码如下： 12Generating Pods project[1]    93845 abort      pod install 经过大佬的提醒，仔细看了下公司机子仍旧能够正确使用 cocoapods ，同时 cocoapods 也无法正确下拉我以前">
+<meta property="og:updated_time" content="2016-12-29T03:27:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用coocapods1.1.1无法成功创建pod工程文件的解决方法">
+<meta name="twitter:description" content="今天在开发的过程中由于手贱将系统工程删了，然后再次重新git clone下拉工程并使用 cocoapods 进行对第三方库的安装，然而失败了。错误代码如下： 12Generating Pods project[1]    93845 abort      pod install 经过大佬的提醒，仔细看了下公司机子仍旧能够正确使用 cocoapods ，同时 cocoapods 也无法正确下拉我以前">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/28/使用coocapods1-1-1无法成功创建pod工程文件的解决方法/"/>
+
+
+
+
+
+  <title>使用coocapods1.1.1无法成功创建pod工程文件的解决方法 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/28/使用coocapods1-1-1无法成功创建pod工程文件的解决方法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用coocapods1.1.1无法成功创建pod工程文件的解决方法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-28T22:17:52+08:00">
+                2016-12-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">programming</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>今天在开发的过程中由于手贱将系统工程删了，然后再次重新<code>git clone</code>下拉工程并使用 cocoapods 进行对第三方库的安装，然而失败了。错误代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Generating Pods project</div><div class="line">[1]    93845 abort      pod install</div></pre></td></tr></table></figure>
+<p>经过大佬的提醒，仔细看了下公司机子仍旧能够正确使用 cocoapods ，同时 cocoapods 也无法正确下拉我以前写好的代码，所以最后问题归结到 cocoapods 上面，然后各种胡乱下载。导致就连最基本的 pod 代码都无法使用，现象如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">/Library/Ruby/Site/2.0.0/rubygems/dependency.rb:308:in `to_specs&apos;: Could not find &apos;cocoapods&apos; (&gt;= 0) among 50 total gem(s) (Gem::MissingSpecError)</div><div class="line">Checked in &apos;GEM_PATH=/Users/*username*/.gem/ruby/2.0.0:/Library/Ruby/Gems/2.0.0:/System/Library/Frameworks/Ruby.framework/Versions/2.0/usr/lib/ruby/gems/2.0.0&apos;, execute `gem env` for more information</div><div class="line">	from /Library/Ruby/Site/2.0.0/rubygems/dependency.rb:320:in `to_spec&apos;</div><div class="line">	from /Library/Ruby/Site/2.0.0/rubygems/core_ext/kernel_gem.rb:65:in `gem&apos;</div><div class="line">	from /usr/local/bin/pod:22:in `&lt;main&gt;&apos;</div></pre></td></tr></table></figure>
+<p>很明显被我玩坏了，┑(￣Д ￣)┍</p>
+<p>所以没办法继续搜方法。</p>
+<p>根据 stackOverflow 上面的介绍，应该是 ruby 2.0.0 和 cocoapods 相冲突导致的 bug 。那就按照原来的方法升级下 ruby 就好了。</p>
+<p><strong>解决方法</strong></p>
+<ol>
+<li><p>首先删除现在已经有的 cocoapods ，由于安装 cocoapods 的时候距离现在已经很久，所以搜了下相关的内容。发现 cocoapods 不仅仅只有一个 cocoapods 主件，还有其他一起的插件。仔细想想貌似之前只删除了 cocoapods 的内容。所以导致 pod 都无法使用。在terminal中输入下面的代码，必要的时候可以使用sudo。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">gem uninstall cocoapods</div><div class="line">gem uninstall cocoapods-core</div><div class="line">gem uninstall cocoapods-deintegrate</div><div class="line">gem uninstall cocoapods-downloader</div><div class="line">gem uninstall cocoapods-plugins</div><div class="line">gem uninstall cocoapods-search</div><div class="line">gem uninstall cocoapods-stats</div><div class="line">gem uninstall cocoapods-try</div><div class="line">gem uninstall cocoapods-trunk</div></pre></td></tr></table></figure>
+</li>
+<li><p>​完成了上面这个步骤，我们基本上原有的cocoapods已经删光了，接下来就是安装新版本。首先输入<code>gem install cocoapods --pre</code>,安装cocoapods，这个时候装的是上一个新的release版本的cocoapods。</p>
+</li>
+<li>当然对于很久以前使用的ruby用户，由于引用的源是ruby的官方源，但是因为是墙外，同时距离又远，所以可能会十分慢，而网上的ruby-china的源貌似请求也是失败的，而老的淘宝源已经过期了，所以，这里更新为新的阿里云的数据源（每隔15分钟更新一次）地址是:<code>https://rubygems-china.oss.aliyuncs.com/</code>，你可以直接访问查看下，但是他首页的命令还是老的淘宝，所以需要更新下。你可以尝试使用下面这条命令来进行修改:<ul>
+<li>使用<code>gem sources -l</code>来查看你的现在保存的源的路径：yourPath。</li>
+<li>然后使用<code>gem sources --remove yourPath</code>删除现有源</li>
+<li>使用<code>gem sources -a https://rubygems-china.oss.aliyuncs.com/</code>来添加新的源，这样你就可以调用国内的源</li>
+<li>gem install rails</li>
+</ul>
+</li>
+<li>这里我遇到了一个问题，我的ruby版本太低，导致了无法安装cocoapods（我以前到底是怎么装上的，(╯‵□′)╯︵┻━┻）</li>
+<li>然后我就安装用rvm(ruby version management)来进行ruby的版本管理。<ul>
+<li>在命令行中输入<code>$ curl -L get.rvm.io | bash -s stable</code></li>
+<li>过了一段时间，就安装完了，然后设置全局命令</li>
+<li><code>source ~/.bashrc</code> 和 <code>source ~/.bash_profile</code>用来设置当前用户和全局命令。</li>
+<li>使用 <code>rvm -v</code> 来测试是否正确安装。</li>
+</ul>
+</li>
+<li>首先使用<code>rvm list known</code>来查看所有的ruby版本</li>
+<li>然后使用<code>rvm install version</code>就能愉快的安装了。</li>
+<li>然而后面有个坑，不知道是什么问题导致，最后还是出现了问题，所以我借鉴了<a href="http://www.jianshu.com/p/17aa1c6b27c0" target="_blank" rel="external">这篇文章</a>，最后将源添加为最开始的国外官方源，然后使用<code>sudo pod install cocoapods --pre</code>，安装了cocoapods 1.2.0 beta-3。最后能够成功安装。</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/cocoapods/" rel="tag"># cocoapods</a>
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/Xcode/" rel="tag"># Xcode</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/27/iOS-tips/" rel="next" title="iOS tips">
+                <i class="fa fa-chevron-left"></i> iOS tips
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/31/Re从零开始创建基于cocoapods的第三方库/" rel="prev" title="Re:从零开始创建基于cocoapods的第三方库">
+                Re:从零开始创建基于cocoapods的第三方库 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

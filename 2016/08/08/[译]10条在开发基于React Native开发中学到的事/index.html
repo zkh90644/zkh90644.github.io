@@ -1,0 +1,744 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="翻译," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="原文链接：点我跳转（国内可能无法访问） React Native是令人兴奋的。它是的开发iOS和安卓的App变成了一段十分有趣的经历。然而这仍旧有一些我和我的伙伴 Nicholas Alan Brown 觉得在我们开始开发一款准备要开发的App中需要掌握的要点 虽然我们都有着全职工作，但是我们决定为《博伽梵歌》——古老的印度教宗教文本做一个iOS App。我在印度的大学上过这样的课，我觉得这将会是">
+<meta name="keywords" content="翻译">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10条在开发基于React Native开发中学到的事">
+<meta property="og:url" content="http://yoursite.com/2016/08/08/[译]10条在开发基于React Native开发中学到的事/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="原文链接：点我跳转（国内可能无法访问） React Native是令人兴奋的。它是的开发iOS和安卓的App变成了一段十分有趣的经历。然而这仍旧有一些我和我的伙伴 Nicholas Alan Brown 觉得在我们开始开发一款准备要开发的App中需要掌握的要点 虽然我们都有着全职工作，但是我们决定为《博伽梵歌》——古老的印度教宗教文本做一个iOS App。我在印度的大学上过这样的课，我觉得这将会是">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/400/1*GheZ6eq8cvBFR2IiTX3bJQ.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*dhRIGl71u2b5_ZtLcIPw0w.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/800/1*kHpDbpJuL34PsfSjqB7lEw.png">
+<meta property="og:image" content="https://cdn-images-1.medium.com/max/2000/1*YNKTErKu5U7klVQPixJfKg.png">
+<meta property="og:updated_time" content="2016-12-25T05:07:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="10条在开发基于React Native开发中学到的事">
+<meta name="twitter:description" content="原文链接：点我跳转（国内可能无法访问） React Native是令人兴奋的。它是的开发iOS和安卓的App变成了一段十分有趣的经历。然而这仍旧有一些我和我的伙伴 Nicholas Alan Brown 觉得在我们开始开发一款准备要开发的App中需要掌握的要点 虽然我们都有着全职工作，但是我们决定为《博伽梵歌》——古老的印度教宗教文本做一个iOS App。我在印度的大学上过这样的课，我觉得这将会是">
+<meta name="twitter:image" content="https://cdn-images-1.medium.com/max/400/1*GheZ6eq8cvBFR2IiTX3bJQ.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/08/08/[译]10条在开发基于React Native开发中学到的事/"/>
+
+
+
+
+
+  <title>10条在开发基于React Native开发中学到的事 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/08/[译]10条在开发基于React Native开发中学到的事/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">10条在开发基于React Native开发中学到的事</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-08T14:29:50+08:00">
+                2016-08-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">programming</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>原文链接：<a href="https://medium.com/@tomgoldenberg/10-things-we-learned-while-building-a-react-native-app-44e22f1c06f#.l8kog0zgt" target="_blank" rel="external">点我跳转（国内可能无法访问）</a></p>
+<p><a href="https://facebook.github.io/react-native/" target="_blank" rel="external">React Native</a>是令人兴奋的。它是的开发iOS和安卓的App变成了一段十分有趣的经历。然而这仍旧有一些我和我的伙伴 Nicholas Alan Brown 觉得在我们开始开发一款准备要开发的App中需要掌握的要点</p>
+<p>虽然我们都有着全职工作，但是我们决定为《博伽梵歌》——古老的印度教宗教文本做一个iOS App。我在印度的大学上过这样的课，我觉得这将会是一个简单的练手工程。下面是这个App的最后产品截图，你也可以在<a href="https://itunes.apple.com/us/app/id1071711190" target="_blank" rel="external">App Store</a>中获取它。</p>
+<p><img src="https://cdn-images-1.medium.com/max/400/1*GheZ6eq8cvBFR2IiTX3bJQ.png" alt="图片1"></p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*dhRIGl71u2b5_ZtLcIPw0w.png" alt="图片2"></p>
+<p><img src="https://cdn-images-1.medium.com/max/800/1*kHpDbpJuL34PsfSjqB7lEw.png" alt="图片3"></p>
+<p>然而当我们开发这个App的时候，就像一个笑话，我们在开发过程中碰到了一些障碍。我将在下面高亮的显示出10点我们所面对的，而且通过许多方法最终解决的。我觉得这可能对于其他没有足够多的时间或者像大型企业一样有充足资源的独立开发者有一定的帮助。</p>
+<h2 id="1-你必须捆绑你的App在你上交到App-Store之前"><a href="#1-你必须捆绑你的App在你上交到App-Store之前" class="headerlink" title="1.你必须捆绑你的App在你上交到App Store之前"></a>1.你必须捆绑你的App在你上交到App Store之前</h2><p>这里有一些令人尴尬的困难，但是他确确实实发生在许多<em>React Native</em> 开发者，特别是对于那些没有Xcode/Swift开发经验的开发者。及时你的App可能在你Xcode的模拟器上顺利的运行，但是你仍需要捆绑（打包）。如果你没有打包并且提交到App Store，苹果的工作人员会一直拒绝你的提交，就像下面这张图中的一样。<br><img src="https://cdn-images-1.medium.com/max/2000/1*YNKTErKu5U7klVQPixJfKg.png" alt="图片4"></p>
+<p>你会发现，他有2个拒绝因为我确实做错了的原因。虽然尽可能快的开始并将App发布到App Store上是令人激动的，但是我不建议这么做，除非：1. 你能够在你的设备上跑这个包，2.你能够在你的设备上顺利的通过TestFlight的Beta测试。<a href="https://facebook.github.io/react-native/docs/running-on-device-ios.html" target="_blank" rel="external">这里</a>有一些打包你App的信息。当然，这些文档中的打包方法有一些困难，但是我们将在接下来的补充上。</p>
+<h2 id="2-更新你的React-Native版本"><a href="#2-更新你的React-Native版本" class="headerlink" title="2. 更新你的React Native版本"></a>2. 更新你的React Native版本</h2><p>这对我们来说可能有一些困难。每次我们升级到最新版本的时候，所有的东西都会出问题。然后我们将会很难弄出一个稳定的版本。对于这个问题的解决方法是删除<em>node_modules</em>这个文件夹，关闭所有进程，然后使用<code>npm install</code>，然后用<code>command + shift + k</code>来清理整个App，用<code>command + shift + b</code>来重建整个App，最后使用<code>command + r</code>来重新运行整个App。学习这个方法在无法成功重建或者我们想要使用下一个版本的过程中是十分有用的。</p>
+<h2 id="3-场景交换动画"><a href="#3-场景交换动画" class="headerlink" title="3. 场景交换动画"></a>3. 场景交换动画</h2><p>在<a href="https://www.reddit.com/r/IAmA/comments/3wyb3m/we_are_the_team_working_on_react_native_ask_us/" target="_blank" rel="external">reddit Thread</a>中，我们问了这个团队为什么使用<code>Navigator</code>这个控件来进行页面跳转十分慢。当我们简单的使用<code>Navigator</code>控件你会发现界面的跳转动画永远是断断续续的。在安卓端这个断断续续的现象更加明显，即使我使用了最新的版本也是这样。这个React Native的团队响应说，他们解决的方法是卸载了native代码中的JS动画，因为JS中的代码堆积导致了掉帧。事实上，存在一个模块<code>InteractionManager</code>，文档<a href="https://facebook.github.io/react-native/docs/performance.html#slow-navigator-transitions" target="_blank" rel="external">连接</a>，我们发现当<code>Navigator</code>和<code>InteractionManager</code>一起工作的时候，他将会运行的十分良好。然而当我们的很多东西都使用更快而且更加原生的NavigatorIOS。而这的缺点是，他不能在复杂的App（译者注：比如Android，因为是iOS原生）中来管理各个界面的状态。幸运的是，我们的App是相当的简单，不需要太多的界面的路由交换。将来我们将会使用<code>Navigator</code>来代替他</p>
+<h2 id="4-用户分析"><a href="#4-用户分析" class="headerlink" title="4. 用户分析"></a>4. 用户分析</h2><p>在整个开发中最阻挠我们的是对于用户的分析，而原因是因为我们在这上面花费了太多时间。当我们开始的时候，我们知道用户分析将会对我们的营销和发展策略投放市场产生巨大的影响，我们尝试用<code>Google Analytics</code>来解决整个问题，但是没有发现可以用的<em>React Native</em>包（你可以在这个网页中找到:<a href="http://stackoverflow.com/questions/34125784/how-to-set-up-analytics-on-react-native-for-ios" target="_blank" rel="external">点击跳转</a>）</p>
+<p>最后我们决定写我们自己的我们使用<a href="https://segment.com/" target="_blank" rel="external">Segment Analytics</a>的连接文件。当我听到Chris Smothers也这样做了之后，我备受鼓舞。接下来是创建方法：</p>
+<ol>
+<li>将Segment集成到podfile中，集成方法<a href="https://segment.com/docs/sources/mobile/ios/" target="_blank" rel="external">链接地址</a>。如何在React Native如何使用podfile的方法在：<a href="https://facebook.github.io/react-native/docs/embedded-app-ios.html" target="_blank" rel="external">链接地址</a>。</li>
+<li>在同一部分中，比如在这里他叫做<em>SEGAnalyticsConfiguration</em>,你讲配置文件放到<em>AppDelegate.m</em>文件中。</li>
+<li>你写一个帮助模块来将<em>Segment分析函数</em>写到你的App中，要点<a href="https://gist.github.com/tgoldenberg/3e32e4988a08081d62ce" target="_blank" rel="external">在这</a>。最后在用户登录，打开某个页面的时候，你就可以App中调用<code>AnalyticsHelper</code>模块函数，来对用户数据进行记录。</li>
+</ol>
+<h2 id="5-动画"><a href="#5-动画" class="headerlink" title="5.动画"></a>5.动画</h2><p>动画对于许多App来说是一个很棒的方面，无论适当用户提交评论（在iPhone上的通知消息的上滑提醒），或者是在进入界面的时候淡入，或者滑动动画，这绝对是很重要的。</p>
+<p>同时React Native的动画模块也是十分棒的。同时他也有着很好的文档。这就使得我们在使用过程中更加简单。我们可以对每个控件使用动画模块直到我发现<a href="https://github.com/oblador/react-native-animatable" target="_blank" rel="external"><em>Animatable</em></a>模块。如果你以前用过CSS库 <code>animated.css</code>，这个动画库和CSS库很相似，他又很多便于使用的动画，同时他也十分便于配置。我们在我们的序列中就是使用了其中的动画——从屏幕顶端进入，并且在进入主屏幕的时候展开，同时降低透明度</p>
+<h2 id="6-notbrent（一个大牛的名字）"><a href="#6-notbrent（一个大牛的名字）" class="headerlink" title="6.@notbrent（一个大牛的名字）"></a>6.@notbrent（一个大牛的名字）</h2><p>这家伙十分令人吃惊，每当Nick和我有问题的时候——无论是界面交互，列表的进入，滑动动画，所有解决方法都来自Brent Batne。这家伙对<em>React Native</em>有着巨大的贡献，同时在很多的例子Demo，你可以Follow他的<a href="https://github.com/brentvatne" target="_blank" rel="external">Github</a>，Brent，感谢你的帮助:)</p>
+<h2 id="7-使用CodePush"><a href="#7-使用CodePush" class="headerlink" title="7.使用CodePush"></a>7.使用CodePush</h2><p>使用它。Just Do IT。相信我，这是值得的。在<a href="http://www.meetup.com/React-Native-NYC/" target="_blank" rel="external"><em>React Native NYC</em></a>之后我学着去使用<a href="https://github.com/Microsoft/code-push" target="_blank" rel="external"><em>CodePush</em></a>。<em>Delivery.com</em>上Jesse Sessler 和 Bruno Barbieri两个大牛说，他们集成React Native到Delivery.com的iOS App上，你可以在<a href="http://www.meetup.com/React-Native-NYC/" target="_blank" rel="external">这里</a>来看他们的介绍。他们展示了如何使用CodePush来使得公司的的开发发生了革命性的改变。CodePush可以使你直接push你的代码到你的App上，而不需要再经过传统的App Store的更新。这意味着你的用户手中的App将在悄无声息中进行更新。这又很多优点：比如说你能使得程序不断的review，而不是通过后续版本来更替他们。同时这也可以使得你可以快速的来修复程序中的Bug。你可以十分容易的在这个<a href="https://github.com/Microsoft/code-push" target="_blank" rel="external">文档</a>中了解到如何去使用它。</p>
+<h2 id="8-社会分享"><a href="#8-社会分享" class="headerlink" title="8.社会分享"></a>8.社会分享</h2><p>分享问题使我们一直在纠结的，当我们把App发布到TestFlight上面的时候，一个相同的问题就是当我们点击<em>分享</em>按钮的时候，这回需要很长时间来跳出分享的选项界面。我们以前使用<code>react-native-activity-view</code>包，并且想要弃用他。现在我们使用<a href="https://github.com/doefler/react-native-social-share" target="_blank" rel="external"><code>react-native-social-share</code></a>，他没有别的，比如说：email，twitter之类的分享，他只有FaceBook，我们发现分享的速度有了显著的提高，但是仍旧不是很棒。事实证明，分享永远是很慢的，及时使用原生的Swift App，但是这将会在未来有很大的改善。</p>
+<h2 id="9-App图标，加载界面等"><a href="#9-App图标，加载界面等" class="headerlink" title="9.App图标，加载界面等"></a>9.App图标，加载界面等</h2><p>如果你以前没有iOS开发经验，这些东西就会对你有一定的阻挠。我很幸运的是Nick是一个全职的移动端的产品经理，所以我让他来解决这些问题，但是这仍旧让我们很困惑，因为就算你获得了app图标和加载界面，并且能够正确的运作了，你仍旧不得不提交不同种类的屏幕截图到App Store的提交界面中。我不是这方面的额专家，但是我发现<a href="https://makeappicon.com/" target="_blank" rel="external">这个网站</a>对于获得不同icon的尺寸很有帮助。同时我发现Ray Wendlich的<a href="http://www.raywenderlich.com/8003/how-to-submit-your-app-to-apple-from-no-account-to-app-store-part-1" target="_blank" rel="external">辅导课</a>也是十分有帮助的，即使App提交的方式一致在改变，但是我觉得你不用害怕他。</p>
+<h2 id="10-react-native打包命令"><a href="#10-react-native打包命令" class="headerlink" title="10.react-native打包命令"></a>10.react-native打包命令</h2><p>首先，这里的内容不适用于最新的版本。react-native的打包命令在新的发布版本中已经发生了改变。现在他有了很多不同的选项。列举如下：</p>
+<ol>
+<li>-platform 这里是决定是iOS还是安卓</li>
+<li>-bundle-output 这是你<code>main.js</code>的bundle文件的位置。</li>
+<li>-dev 通常你要设置为false</li>
+<li>-entry-file是你<code>index.ios.js</code>的文件位置。</li>
+<li>-assetsdest 这是一个令人迷惑的参数，因为这似乎是打包你的文件资源（assets）。然而，在很多情况下，你不需要去特别在意他。相对的，在你的<code>node_modules/react-native/packager</code>路径下的一个文件已经已经打包好了你的文件资源(assets)。为什么他记录的那么好，我不是很清楚，可能是因为如果当我们试着去打包的时候，再去找起来相关的信息可能就十分麻烦了。无论如何只要运行<code>node_modules/react-native/packager/react-native-xcode.sh</code>，他就会打包所有你的资源。</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>我希望你能喜欢这篇文章，尽管遇到了这么多困难，我相信React Native将会在未来的移动市场有一个美好的未来。毕竟我和我的伙伴从开始搭建到最后发布，只要短短2个月时间。</p>
+<p>（译者注，因为后面全是广告，我就不翻译下去了。）</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/翻译/" rel="tag"># 翻译</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/08/[译]autolayout_uitableView_stackoverflow/" rel="next" title="iOS中使用autolayout来进行UITableView的布局(2)">
+                <i class="fa fa-chevron-left"></i> iOS中使用autolayout来进行UITableView的布局(2)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/09/Swift中第三方Sqlite3框架SQLite.swift使用/" rel="prev" title="Swift中第三方Sqlite3框架SQLite.swift使用">
+                Swift中第三方Sqlite3框架SQLite.swift使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-你必须捆绑你的App在你上交到App-Store之前"><span class="nav-number">1.</span> <span class="nav-text">1.你必须捆绑你的App在你上交到App Store之前</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-更新你的React-Native版本"><span class="nav-number">2.</span> <span class="nav-text">2. 更新你的React Native版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-场景交换动画"><span class="nav-number">3.</span> <span class="nav-text">3. 场景交换动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-用户分析"><span class="nav-number">4.</span> <span class="nav-text">4. 用户分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-动画"><span class="nav-number">5.</span> <span class="nav-text">5.动画</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6-notbrent（一个大牛的名字）"><span class="nav-number">6.</span> <span class="nav-text">6.@notbrent（一个大牛的名字）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#7-使用CodePush"><span class="nav-number">7.</span> <span class="nav-text">7.使用CodePush</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#8-社会分享"><span class="nav-number">8.</span> <span class="nav-text">8.社会分享</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#9-App图标，加载界面等"><span class="nav-number">9.</span> <span class="nav-text">9.App图标，加载界面等</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#10-react-native打包命令"><span class="nav-number">10.</span> <span class="nav-text">10.react-native打包命令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">11.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

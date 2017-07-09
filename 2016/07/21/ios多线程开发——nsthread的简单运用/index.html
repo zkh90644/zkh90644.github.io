@@ -1,0 +1,755 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS,NSThread," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="前段时间写了NSOperation，GCD，最后肯定不能拉下NSThread。毕竟既然学了iOS，该了解的总得都了解的。  ##介绍NSThread相对于GCG和NSOperation来说更加轻量级。毕竟从名字看起来一看就是用来控制线程（Thread）的。正如苹果官网上对他的解释：  An NSThread object controls a thread of execution. Use t">
+<meta name="keywords" content="iOS,NSThread">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS多线程开发——NSThread的简单运用">
+<meta property="og:url" content="http://yoursite.com/2016/07/21/ios多线程开发——nsthread的简单运用/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前段时间写了NSOperation，GCD，最后肯定不能拉下NSThread。毕竟既然学了iOS，该了解的总得都了解的。  ##介绍NSThread相对于GCG和NSOperation来说更加轻量级。毕竟从名字看起来一看就是用来控制线程（Thread）的。正如苹果官网上对他的解释：  An NSThread object controls a thread of execution. Use t">
+<meta property="og:updated_time" content="2016-12-25T07:25:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS多线程开发——NSThread的简单运用">
+<meta name="twitter:description" content="前段时间写了NSOperation，GCD，最后肯定不能拉下NSThread。毕竟既然学了iOS，该了解的总得都了解的。  ##介绍NSThread相对于GCG和NSOperation来说更加轻量级。毕竟从名字看起来一看就是用来控制线程（Thread）的。正如苹果官网上对他的解释：  An NSThread object controls a thread of execution. Use t">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/21/ios多线程开发——nsthread的简单运用/"/>
+
+
+
+
+
+  <title>iOS多线程开发——NSThread的简单运用 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/07/21/ios多线程开发——nsthread的简单运用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS多线程开发——NSThread的简单运用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-07-21T21:38:50+08:00">
+                2016-07-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">programming</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>前段时间写了<a href="http://blog.csdn.net/zkh90644/article/details/51944923" target="_blank" rel="external">NSOperation</a>，<a href="http://blog.csdn.net/zkh90644/article/details/51934062" target="_blank" rel="external">GCD</a>，最后肯定不能拉下<strong>NSThread</strong>。毕竟既然学了iOS，该了解的总得都了解的。</p>
+</blockquote>
+<p>##介绍<br><strong>NSThread</strong>相对于GCG和NSOperation来说更加轻量级。毕竟从名字看起来一看就是用来控制线程（Thread）的。正如苹果官网上对他的解释：</p>
+<blockquote>
+<p>An <strong>NSThread</strong> object controls a thread of execution. Use this class when you want to have an Objective-C method run in its own thread of execution. Threads are especially useful when you need to perform a lengthy task, but don’t want it to block the execution of the rest of the application. In particular, you can use threads to avoid blocking the main thread of the application, which handles user interface and event-related actions. Threads can also be used to divide a large job into several smaller jobs, which can lead to performance increases on multi-core computers.</p>
+</blockquote>
+<p>可能看了很烦，不过总结下来就是一句话：你可以用线程来将一个大的任务分割成很多小任务来处理，从而提高效率，不过不要阻碍某个线程（特别是主线程，因为他控制了用户的交互），这很容易造成不好的用户体验。</p>
+<p>不过由于他是轻量级的，它里面的方法就会比较少，我们需要记忆的也比较少，不过记忆的比较少的后果就是，我们在使用它的时候，需要关心的东西可能就比较多了，比如：线程同步（这个是多线程最伤脑的一个问题）。</p>
+<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="##基本使用"></a>##基本使用</h2><p>###一、创建<br><code>- initWithTarget:selector:object:</code>和<code>init</code>这两个方法，相信只要作为一个iOS开发者的话，应该看到函数名就能知道如何使用了。</p>
+<p>###二、使用</p>
+<p>####运行线程<br>使用的话，因为系统版本的关系，有一定的区分</p>
+<ol>
+<li>如果在OS X 10.5以前的话，由于只有<code>detachNewThreadSelector:toTarget:withObject:</code>方法，所以只能使用这个方法。</li>
+<li>在OS X 10.5以后，苹果给我们添加了一个更加方便的方法<code>start</code>。只要你设置完Thread的相关内容，直接start他就能跑起来啦。</li>
+</ol>
+<p>P.S. 由于<code>detachNewThreadSelector:toTarget:withObject</code>方法是一个类方法，所以他是直接开始运行你指定的内容，不会产生相应的对象</p>
+<blockquote>
+<p>小知识：查找了下，init和initWithTarget方法在iOS2.0以后才能被使用，而iOS 2.0是在08年的时候运用到iPhone上的，而OS X 10.5是在06年出生的，这也意味着苹果那时候都没想到多线程会变得那么常见~~（大雾）</p>
+</blockquote>
+<p>####修改状态<br>由于NSThread是轻量级的，所以我们可以直接对线程进行管理，所以就可以调用线程的sleep和cancel。</p>
+<ul>
+<li>休眠线程：<code>sleepUntilDate:</code>和<code>sleepForTimeInterval:</code>这两个一个是休眠到什么时候另一个是休眠多久（精确到毫秒）</li>
+<li>退出线程：<code>exit</code>，这个是类方法，所以只能退出当前线程。</li>
+<li>相对应的，苹果为了方便开发者的判断，也增加了<code>executing</code>,<code>finished</code>,<code>cancelled</code>这三个来查询线程的当前的状态。</li>
+</ul>
+<p>####常用属性</p>
+<ul>
+<li>threadDictionary:线程的字典用来存储一些有意义的内容</li>
+<li>name:线程名字，可以更方便的区分线程。</li>
+<li>stackSize:堆栈大小，这个只要知道就可以了。</li>
+</ul>
+<p>####优先级设置：<br>正如我们所提到的，多线程只是单核里面的多线程，所以设置优先级只能修改CPU对他调用的次数，这个无法解决线程同步的问题。</p>
+<p>设置：<code>setThreadPriority:</code>方法<br>获得：<code>threadPriority</code>属性</p>
+<p>###三、已存在的线程的调用<br>对于使用的线程使用（特别是主线程），在日常使用中也是比较频繁的使用的。而苹果提供了这几个API。</p>
+<ol>
+<li>获得主线程主线程：<code>mainThread</code></li>
+<li>获得当前线程：<code>currentThread</code></li>
+</ol>
+<p>对应的苹果也提供了查询线程的属性，这很方便程序员来判断是否为当前线程或者主线程，从而更好对线程更好的处理。</p>
+<p>###四、处理线程同步产生的读写问题<br>线程同步中最头疼的就是数据的重复从而产生的读写错误，在GCD中我们使用dispatch<em>barrier</em>*函数。在NSOperation中我们使用设置OperationQueue的最大处理的线程数，从而控制只有一条线程在处理数据。而NSThread，由于是对线程进行直接控制的，所以我们需要用其他方法来进行处理。</p>
+<p>这里就使用三种：</p>
+<ol>
+<li>使用NSLock，也就是俗话所说的上锁。一般使用<code>[NSLockObject lock]</code>来上锁，用<code>[NSLockObject unlock]</code>来解锁。这个主要用来锁住你处理的代码块</li>
+<li>使用NSCondition，这个方法和上面的NSLock相似，不过他可以使用<code>[NSConditionObj signal]</code>来唤醒其他线程中的<code>[NSConditionObj wait]</code>的方法，从而方便的控制两个或两个以上线程，从而更方便控制数据流。</li>
+<li>使用@synchronized(anObj){code block}，anObj就是你需要锁住的对象，code block就是你需要锁住的区域。</li>
+</ol>
+<p>以上（包括前面两篇文章）就是所有iOS中的我们经常用到的多线程开发的简单介绍了。主要是为了自己能够有一个更好的总结，同时希望对各位看官有一定的帮助。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/NSThread/" rel="tag"># NSThread</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/18/继续学习GCD/" rel="next" title="继续学习GCD">
+                <i class="fa fa-chevron-left"></i> 继续学习GCD
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/08/[译]autolayout_uitableView_stackoverflow/" rel="prev" title="iOS中使用autolayout来进行UITableView的布局(2)">
+                iOS中使用autolayout来进行UITableView的布局(2) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本使用"><span class="nav-number">1.</span> <span class="nav-text">##基本使用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

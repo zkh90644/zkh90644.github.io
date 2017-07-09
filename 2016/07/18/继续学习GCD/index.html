@@ -1,0 +1,719 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS,GCD," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="本着虚心学习的原则，在上次看完GCD后，在码代码的过程中，经常会在dispatch后自动跳出函数列中看到带有context，但是在平常的自学过程中，都没有见到过带有context的参数。那他到底指的是啥？ 带着这个好奇心，我努力的爬遍了网上我能找到的相关文档。然而相关的资料很少，最后没办法只能去苹果的官方文档上找，最终大概的了解了这个context的作用。（果然，最原始的才是最有效的。） 在官方文">
+<meta name="keywords" content="iOS,GCD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="继续学习GCD">
+<meta property="og:url" content="http://yoursite.com/2016/07/18/继续学习GCD/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="本着虚心学习的原则，在上次看完GCD后，在码代码的过程中，经常会在dispatch后自动跳出函数列中看到带有context，但是在平常的自学过程中，都没有见到过带有context的参数。那他到底指的是啥？ 带着这个好奇心，我努力的爬遍了网上我能找到的相关文档。然而相关的资料很少，最后没办法只能去苹果的官方文档上找，最终大概的了解了这个context的作用。（果然，最原始的才是最有效的。） 在官方文">
+<meta property="og:updated_time" content="2016-12-25T07:26:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="继续学习GCD">
+<meta name="twitter:description" content="本着虚心学习的原则，在上次看完GCD后，在码代码的过程中，经常会在dispatch后自动跳出函数列中看到带有context，但是在平常的自学过程中，都没有见到过带有context的参数。那他到底指的是啥？ 带着这个好奇心，我努力的爬遍了网上我能找到的相关文档。然而相关的资料很少，最后没办法只能去苹果的官方文档上找，最终大概的了解了这个context的作用。（果然，最原始的才是最有效的。） 在官方文">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/18/继续学习GCD/"/>
+
+
+
+
+
+  <title>继续学习GCD | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/07/18/继续学习GCD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">继续学习GCD</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-07-18T20:06:00+08:00">
+                2016-07-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">programming</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本着虚心学习的原则，在上次看完GCD后，在码代码的过程中，经常会在dispatch后自动跳出函数列中看到带有context，但是在平常的自学过程中，都没有见到过带有context的参数。那他到底指的是啥？</p>
+<p>带着这个好奇心，我努力的爬遍了网上我能找到的相关文档。然而相关的资料很少，最后没办法只能去苹果的官方文档上找，最终大概的了解了这个context的作用。（果然，最原始的才是最有效的。）</p>
+<p>在官方文档中有这么一个方法<code>void dispatch_async_f( dispatch_queue_t queue, void *context, dispatch_function_t work)</code>,这个方法和我们日常搜用的<code>dispatch_async</code>类似，唯一的区别的就是中间增加了context这个参数。</p>
+<blockquote>
+<p>画外音：不是<code>dispatch_async</code>中用的是<code>block</code>，<code>dispatch_async_f</code>中用的是work么？</p>
+<p>答：这两个反正都是为了引用一个代码块，实际上的作用基本上都差不多的啦</p>
+</blockquote>
+<p>而苹果对于这个context的解释是这样的：</p>
+<blockquote>
+<p>The application-defined context parameter to pass to the function.</p>
+<p>将程序中定义的上下文传递给参数。</p>
+</blockquote>
+<p>那么新的问题又来了，既然他是将上下文传递给参数，我们在OC编码的过程中，主要还是基于Foundation框架，也就是所有对象继承与NSObject对象，但是他是一个OC对象，而这个context所需要的内容是一个基于C语言的指针。那么如果将OC对象转化成C呢？</p>
+<blockquote>
+<p>画外音：我就是不用OC，我用C的malloc也是可以的啊</p>
+<p>你出去！</p>
+</blockquote>
+<p>正如我们所知道的，OC是C的拓展，让C拥有了面向对象的作用，从而大大提高的程序员开发的效率。同时苹果为了更方便的让开发者使用OC这门语言，他们在<strong>iOS 5</strong>以后加入到LLVM 3.0编译器的。同时使用ARC能够解决开发者心烦的手动管理内存问题，这极大的方便了程序猿们。</p>
+<p>而C因为没有ARC机制，所以解决前面这个问题的方法就是：</p>
+<p>将这个需要传输的对象的内存管理，从ARC手中抢过来。让我们手动来管理，这样就可以愉快的将变量以C的形式传入进去啦~~~</p>
+<p>那么既然要解决这个问题，我们就需要寻找，如何将内存管理从ARC中“夺”过来。</p>
+<p>在翻遍了许多网页后，这几个函数引入我眼帘：此处<a href="http://blog.csdn.net/chinahaerbin/article/details/9471419" target="_blank" rel="external">参考原文</a></p>
+<ul>
+<li>__bridge：只做类型转换，不修改需要管理的内存使用权</li>
+<li>__bridge_retained：做类型转换Core Foundation-&gt;OC对象，同时将管理权从ARC中移除，后期需要对对象进行手动释放</li>
+<li>__bridge_transfer：做类型转换OC对象-&gt;Core Foundation，同时将管理权移回ARC</li>
+</ul>
+<p><strong>首先展示显示失败的代码：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">//Data.h</div><div class="line"></div><div class="line">@property(nonatomic,assign)int number;</div><div class="line"></div><div class="line">//Data.m</div><div class="line"></div><div class="line">-(void)dealloc&#123;</div><div class="line">    NSLog(@&quot;the Data dealloc...&quot;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">//ViewController - viewDidLoad</div><div class="line"></div><div class="line">- (void)gcdTest1&#123;</div><div class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;helloworld&quot;, DISPATCH_QUEUE_SERIAL);</div><div class="line">    Data *myDate = [[Data alloc]init];</div><div class="line"></div><div class="line">    myDate.number = 20;</div><div class="line"></div><div class="line">    dispatch_set_context(queue, (__bridge void *)myDate);</div><div class="line"></div><div class="line">    dispatch_async(queue, ^&#123;</div><div class="line">        Data *data = (__bridge Data*)dispatch_get_context(queue);</div><div class="line">        NSLog(@&quot;%d&quot;,data.number);</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    myDate = nil;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>失败原因：</strong>由于我们在这里设置为了nil也就是意味着我们将他释放，但是在线程中的data还是调用者，同时因为c中对ARC不进行操作，所以，线程中的data指向的地址出现问题，所以出现<code>EXC_BAD_ACCESS</code></p>
+<p>console中的输出为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">2016-07-18 21:29:35.946 GCD-OC[65571:7506303] the Data dealloc...</div><div class="line">2016-07-18 21:29:35.946 GCD-OC[65571:7506809] 20</div><div class="line">(出现内存问题)</div></pre></td></tr></table></figure>
+<p><strong>正确解释的代码：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">- (void)gcdTest1&#123;</div><div class="line">    dispatch_queue_t queue = dispatch_queue_create(&quot;helloworld&quot;, DISPATCH_QUEUE_SERIAL);</div><div class="line">    Data *myDate = [[Data alloc]init];</div><div class="line"></div><div class="line">    myDate.number = 20;</div><div class="line"></div><div class="line">    dispatch_set_context(queue, (__bridge_retained void*)myDate);</div><div class="line"></div><div class="line">    dispatch_set_finalizer_f(queue, &amp;cleanMyMemory);</div><div class="line"></div><div class="line">    dispatch_async(queue, ^&#123;</div><div class="line">        Data *data = (__bridge Data*)dispatch_get_context(queue);</div><div class="line">        NSLog(@&quot;%d&quot;,data.number);</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">void cleanMyMemory(void *context)&#123;</div><div class="line">    Data *data = (__bridge_transfer Data*)context;</div><div class="line">    data = nil;</div><div class="line">    NSLog(@&quot;clean the data&quot;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>正确的输出：</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">2016-07-18 21:39:52.148 GCD-OC[65742:7528074] 20</div><div class="line">2016-07-18 21:39:52.149 GCD-OC[65742:7528074] the Data dealloc...</div><div class="line">2016-07-18 21:39:52.149 GCD-OC[65742:7528074] clean the data</div></pre></td></tr></table></figure>
+<p>以上就是Context的基本使用方法，看完之后各位看官们就能愉快的将OC对象作为参数传到已经准备好的dispatch对象的执行函数中了~~~~然而具体如何使用，这个根据具体开发环境决定。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/GCD/" rel="tag"># GCD</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/17/浅谈GCD/" rel="next" title="浅谈GCD">
+                <i class="fa fa-chevron-left"></i> 浅谈GCD
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/21/ios多线程开发——nsthread的简单运用/" rel="prev" title="iOS多线程开发——NSThread的简单运用">
+                iOS多线程开发——NSThread的简单运用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,744 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="我经常发现在我的代码中会出现循环引用的情况。我觉得别人也会出现这样的情况。虽然我不认识你，但是我相信在耳边肯定会经常出现“我什么时候要使用’weak’？如果我用’unowned’会有什么坑？”这篇文章我将会在其中写明如何在代码中使用strong, weak, unowned从而避免循环引用。但是我们可能都不知道如何使用他们。幸运的是，我将会告诉你他们都是些什么，什么时候应该是用他们。我希望这篇文章">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[译]Swift中的Weak，Strong和Unowned">
+<meta property="og:url" content="http://yoursite.com/2017/04/04/译-Swift中的Weak，Strong和Unowned/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="我经常发现在我的代码中会出现循环引用的情况。我觉得别人也会出现这样的情况。虽然我不认识你，但是我相信在耳边肯定会经常出现“我什么时候要使用’weak’？如果我用’unowned’会有什么坑？”这篇文章我将会在其中写明如何在代码中使用strong, weak, unowned从而避免循环引用。但是我们可能都不知道如何使用他们。幸运的是，我将会告诉你他们都是些什么，什么时候应该是用他们。我希望这篇文章">
+<meta property="og:image" content="https://static1.squarespace.com/static/5592eb03e4b051859f0b377f/5594defde4b0ad11495b5c4e/5594defde4b0ad11495b5c80/1435819784267/retain-cycle-copy.png?format=1000w">
+<meta property="og:image" content="http://static1.squarespace.com/static/5592eb03e4b051859f0b377f/5594defde4b0ad11495b5c4e/5594defde4b0ad11495b5c7d/1435268855000/retain-cycle-broken.png?format=original">
+<meta property="og:image" content="https://static1.squarespace.com/static/5592eb03e4b051859f0b377f/t/55cba3aae4b04e605ee3065f/1439409067643/?format=2500w">
+<meta property="og:updated_time" content="2017-07-08T15:06:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[译]Swift中的Weak，Strong和Unowned">
+<meta name="twitter:description" content="我经常发现在我的代码中会出现循环引用的情况。我觉得别人也会出现这样的情况。虽然我不认识你，但是我相信在耳边肯定会经常出现“我什么时候要使用’weak’？如果我用’unowned’会有什么坑？”这篇文章我将会在其中写明如何在代码中使用strong, weak, unowned从而避免循环引用。但是我们可能都不知道如何使用他们。幸运的是，我将会告诉你他们都是些什么，什么时候应该是用他们。我希望这篇文章">
+<meta name="twitter:image" content="https://static1.squarespace.com/static/5592eb03e4b051859f0b377f/5594defde4b0ad11495b5c4e/5594defde4b0ad11495b5c80/1435819784267/retain-cycle-copy.png?format=1000w">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/04/04/译-Swift中的Weak，Strong和Unowned/"/>
+
+
+
+
+
+  <title>[译]Swift中的Weak，Strong和Unowned | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/04/译-Swift中的Weak，Strong和Unowned/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[译]Swift中的Weak，Strong和Unowned</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-04T07:58:36+08:00">
+                2017-04-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>我经常发现在我的代码中会出现循环引用的情况。我觉得别人也会出现这样的情况。虽然我不认识你，但是我相信在耳边肯定会经常出现“我什么时候要使用’weak’？如果我用’unowned’会有什么坑？”这篇文章我将会在其中写明如何在代码中使用strong, weak, unowned从而避免循环引用。但是我们可能都不知道如何使用他们。幸运的是，我将会告诉你他们都是些什么，什么时候应该是用他们。我希望这篇文章能够帮助你学习在什么情况下需要使用它们。</p>
+<h2 id="让我们开始吧"><a href="#让我们开始吧" class="headerlink" title="让我们开始吧"></a>让我们开始吧</h2><h3 id="ARC"><a href="#ARC" class="headerlink" title="ARC"></a>ARC</h3><p><code>ARC</code> 是一个苹果用来自动管理内存的技术。他具体体现在 <em>Automatic Reference Counting.（自动引用计数）</em> 这意味着一个对象只有在没有强引用的时候才会被释放。</p>
+<h3 id="STRONG"><a href="#STRONG" class="headerlink" title="STRONG"></a>STRONG</h3><p>让我们从什么是 Strong 开始吧。这本质上是一个很普通的引用（包括指针和其他的所有引用方法。）但是他的特殊点在于它能够 <strong><em>保护</em></strong> 被引用的对象在引用计数中一直有1个引用计数，从而防止被释放。但究其本质，<strong>和其他的别的一样</strong> 就是对一个对象有着强引用，这使得对象不被释放。这一点在接下去介绍循环引用的时候很重要。<br>强引用在 swift 中随处可见。实际上， Strong 是 swift 中的默认属性。对于内联对象中我们使用 strong 是安全的。对于一个对象的成员变量，一般我们也是使用强引用类型。</p>
+<p>接下去就是一个强引用的例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">class Kraken &#123;    let tentacle = Tentacle() //strong reference to child.&#125;</div><div class="line">class Tentacle &#123;    let sucker = Sucker() //strong reference to child&#125;</div><div class="line">class Sucker &#123;&#125;</div></pre></td></tr></table></figure>
+<p>在上面的内敛代码中，<code>Kraken</code>有对于<code>Tentacle</code>的强引用，其中<code>Tentacle</code>对于<code>Sucker</code>有着强引用。这种强引用了从父对象<code>Kraken</code>流向了子对象<code>Sucker</code>（也就是说引用是连续的）<br>相同的，在动画的块中，引用关系也是相同的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">UIView.animateWithDuration(0.3) &#123;    self.view.alpha = 0.0&#125;</div></pre></td></tr></table></figure>
+<p>上面的代码中，<code>animationWIthDuration</code>是一个<code>UIView</code>的静态方法，其中的闭包块是父亲，而其中的self是孩子。</p>
+<p>如果孩子当中也要引用父亲对象的话需要怎么办？接下来我们就要使<code>weak</code>和<code>Unowned</code>属性。</p>
+<h2 id="WEAK-和-UNOWNED"><a href="#WEAK-和-UNOWNED" class="headerlink" title="WEAK 和 UNOWNED"></a>WEAK 和 UNOWNED</h2><h3 id="WEAK"><a href="#WEAK" class="headerlink" title="WEAK"></a>WEAK</h3><p>weak 引用只是一个指向那个对象的指针，但是他不会保护这个对象，所以当没有对象持有他的时候，他将会被 ARC 释放。如果这个对象被强引用，那么他的引用计数会加一，但是弱引用则不会。例外，弱引用的指针也会在对象成功释放的时候置零。这个时候如果你再去获得他的对象，会获得一个无效的对象或者nil。</p>
+<p>在 swift 中，所有的弱引用都会作为<code>Optionals</code>（考虑一下 <code>var</code> 和 <code>let</code>的区别）因为这个引用应该 <strong>能</strong> 并且 <strong>将会</strong> 在没有对象持有他的时候置为nil。</p>
+<p>接下来是个例子，代码不能进行编译。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">class Kraken &#123;    weak let tentacle = Tentacle() //let is a constant! All weak variables MUST be mutable.&#125;</div></pre></td></tr></table></figure></p>
+<p>因为前缀是<code>let</code>。而<code>let</code>会使得这个对象在运行时（runtime）的情况下无法变化。因为weak的前缀的对象可能会使 nil ，所以 swift 的编译器中对于弱引用的变量需要使用<code>var</code>。</p>
+<p>weak的弱引用主要使用的地方是用在你觉得有可能会出现 <strong>循环引用</strong> 的地方。一个循环发生在两个对象都 <strong>强引用</strong> 引用彼此的时候。如果两个对象都强引用着彼此的时候，ARC 将不会调用 <code>release</code> 的代码，因为两者都彼此没有释放。下图是苹果用来解释循环引用的插图。</p>
+<p><img src="https://static1.squarespace.com/static/5592eb03e4b051859f0b377f/5594defde4b0ad11495b5c4e/5594defde4b0ad11495b5c80/1435819784267/retain-cycle-copy.png?format=1000w" alt="循环引用"></p>
+<p>一个完美的体现循环引用的函数（相当新的）就是 <code>NSNotification</code> 的 APIs。让我们来看下下面的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">class Kraken &#123;</div><div class="line">    var notificationObserver: ((NSNotification) -&gt; Void)?</div><div class="line">    init() &#123;</div><div class="line">        notificationObserver = NSNotificationCenter.defaultCenter().addObserverForName(&quot;humanEnteredKrakensLair&quot;, object: nil, queue: NSOperationQueue.mainQueue()) &#123; notification in</div><div class="line">            self.eatHuman()</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    deinit &#123;</div><div class="line">        if notificationObserver != nil &#123;</div><div class="line">            NSNotificationCenter.defaultCenter.removeObserver(notificationObserver)</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>代码中产生了循环引用。正如你所看到的，闭包就像 Objective-C 中的 block 。如果任何变量声明在 <strong>闭包范围之外</strong> ，引用 <strong>该范围内</strong> 的该变量将创建另一个对该对象的强引用。唯一的例外是使用价值语义的变量，例如 Swift 中的 Ints ， Strings ， Arrays 和 Dictionaries。</p>
+<p>这里 <strong>NSNotificationCenter</strong> retain 了一个闭包并且在闭包中在调用 <code>eatHuman</code> 持有了 self 这个强引用。上面的代码中你在<code>deinit</code>方法中释放了消息通知这个成员变量，但是<code>deinit</code>不会被 ARC 调用，因为这个闭包里面调用了 <code>Kraken</code> 自身这个强应用。</p>
+<p>另外的情况也会发生在 NSTimers 和 NSThread 里面。</p>
+<p>而解决这个的办法就是对于闭包中的<code>self</code>这个对象使用弱引用进行引用。这将会打破强引用的循环。这样的话，我们的对象引用关系将会如下图所示：<br><img src="http://static1.squarespace.com/static/5592eb03e4b051859f0b377f/5594defde4b0ad11495b5c4e/5594defde4b0ad11495b5c7d/1435268855000/retain-cycle-broken.png?format=original" alt="weak &amp; strong"></p>
+<p>改变成弱引用，不会增加弱引用的引用计数器，因此 ARC 将会在正确的时候将其释放。</p>
+<p>如果需要在闭包中使用<code>weak</code>和<code>unowned</code>，你需要使用中括号([])在闭包的内部。</p>
+<p>例子如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">let closure = &#123; [weak self] in</div><div class="line">    self?.doSomething() //Remember, all weak variables are Optionals!</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>为什么要在使用 weak 的时候使用中括号语法？这看起来十分诡异！在 swift 中我们只有在数组中看到中括号。让我们猜一下？你可以在闭包中指定多个捕获值。<br>例子如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">let closure = &#123; [weak self, unowned krakenInstance] in //Look at that sweet Array of capture values.</div><div class="line">    self?.doSomething() //weak variables are Optionals!</div><div class="line">    krakenInstance.eatMoreHumans() //unowned variables are not.</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这看起来和数组很像对吧？现在你知道为什么捕获值在方括号中。所以现在让我们继续学习，我们能够修复消息中的代码的循环引用了。我们可以将<code>[weak self]</code>加入闭包的捕获列表中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">NSNotificationCenter.defaultCenter().addObserverForName(&quot;humanEnteredKrakensLair&quot;, object: nil, queue: NSOperationQueue.mainQueue()) &#123; [weak self] notification in //The retain cycle is fixed by using capture lists!</div><div class="line">    self?.eatHuman() //self is now an optional!</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>另外我们需要使用弱引用的时候就是在 <strong>类</strong> 使用协议的使用委托中。在 swift 中，因为类使用引用语义。在 swift 中，结构体和枚举类型也能遵守协议。但是他们使用引用语义。如果一个父类使用了代理，那么他的成员变量如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">class Kraken: LossOfLimbDelegate &#123;</div><div class="line">    let tentacle = Tentacle()</div><div class="line">    init() &#123;</div><div class="line">        tentacle.delegate = self</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    func limbHasBeenLost() &#123;</div><div class="line">        startCrying()</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">protocol LossOfLimbDelegate &#123;</div><div class="line">    func limbHasBeenLost()</div><div class="line">&#125;</div><div class="line"></div><div class="line">class Tentacle &#123;</div><div class="line">    var delegate: LossOfLimbDelegate?</div><div class="line"></div><div class="line">    func cutOffTentacle() &#123;</div><div class="line">        delegate?.limbHasBeenLost()</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>然后你需要使用 weak。在这个例子中 Tentacle 通过代理强引用了 Kraken，而在 Kraken 中使用了一起强引用了他的成员变量 Tentacle。我们通过弱引用，使得他的代理定义如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">weak var delegate:LossOfLimbDelegate?</div></pre></td></tr></table></figure>
+<p>大声告诉我你想说啥？做了这个你就不能编译了？！好吧，这个问题是因为一个没有类的类型的代理不能够使用 weak 来进行表示。</p>
+<p>为了解决这个问题，我们不得不使用一个class协议来修饰我们的代理就像我们协议的内敛<code>:class</code>来进行修饰：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">protocol LossOfLimbDelegate: class &#123; //The protocol now inherits class</div><div class="line">    func limbHasBeenLost()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们什么时候需要使用<code>:class</code>,<a href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/Protocols.html#//apple_ref/doc/uid/TP40014097-CH25-ID281" target="_blank" rel="external">苹果</a>给出的解释如下:</p>
+<blockquote>
+<p>”当该协议的要求定义的行为假定或要求符合类型具有引用语义而不是值语义时，请使用类专用协议”</p>
+</blockquote>
+<p>本质上，如果你使用了有层次结构的引用，你使用<code>:class</code>。但是对于结构体和枚举类型，你就不需要使用<code>:class</code>，因为结构体和枚举类型是值类型而类是引用类型。</p>
+<h3 id="UNOWNED"><a href="#UNOWNED" class="headerlink" title="UNOWNED"></a>UNOWNED</h3><p><code>Weak</code>和<code>Unowned</code>引用很像，但是他们还是不一样的。所以说 Unowned 引用和 Weak 引用很像。Unowned 不会增加引用计数，在 Swift 中，Unowned 引用意味着对应的类型 <strong>不可能为 Optional 类型</strong>。这使得人们更简单的去管理而不需要重新去判断是否是一个optoin类型。这不像<a href="http://www.krakendev.io/when-to-use-implicitly-unwrapped-optionals/" target="_blank" rel="external">这里面所说的</a>。另外，<code>Unowned</code>引用是不会置零。这意味着当对象呗释放的时候，他不会不会亲历指针。这意味着使用 <code>Unowned</code> 会导致<a href="https://www.blackhat.com/presentations/bh-usa-07/Afek/Whitepaper/bh-usa-07-afek-WP.pdf" target="_blank" rel="external">野指针</a>的存在。对于像我一样已经用过 Objective-C 的人来说，<code>unowned</code>映射到 <code>Objective-C</code> 上面就像 <code>unsafe_unretained</code>。</p>
+<p>现在你可能过一点疑惑。weak 和 unowned 这两个都不会增加引用计数，但是他们都会解决循环引用的问题，那么我们需要在什么时候使用他们呢？！<a href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/AutomaticReferenceCounting.html" target="_blank" rel="external">苹果的文档</a>是这么介绍的：</p>
+<blockquote>
+<p>weak 在某个生命周期中的某个时刻是有效的。但是如果你知道设置了这个变量后，他永远都不会为0，那么请使用 unowned</p>
+</blockquote>
+<p>那你读过这类文章，就像<a href="http://www.krakendev.io/when-to-use-implicitly-unwrapped-optionals/" target="_blank" rel="external">这篇文章</a>。如果你能够保证引用不会置空，那么请使用 unowned 否则请使用 weak。</p>
+<p>这里有一个很好的例子，里面的闭包里面存在循环引用。但是其中的 self 引用永远不可能为空：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">class RetainCycle &#123;</div><div class="line">    var closure: (() -&gt; Void)!</div><div class="line">    var string = &quot;Hello&quot;</div><div class="line"></div><div class="line">    init() &#123;</div><div class="line">        closure = &#123;</div><div class="line">            self.string = &quot;Hello, World!&quot;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//Initialize the class and activate the retain cycle.</div><div class="line">let retainCycleInstance = RetainCycle()</div><div class="line">retainCycleInstance.closure() //At this point we can guarantee the captured self inside the closure will not be nil. Any further code after this (especially code that alters self&apos;s reference) needs to be judged on whether or not unowned still works here.</div></pre></td></tr></table></figure>
+<p>在这种情况下，循环引用是因为闭包中捕获了了 self 并强引用了他，并将其作为自己的一个闭包属性。为了打破这个循环引用，我们使用<code>[unowned self]</code>。<br>加入闭包中的结果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">closure = &#123; [unowned self] in</div><div class="line">    self.string = &quot;Hello, World!&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在这种情况下，我们能够保证 self 永远不为空，在我们创建了 循环引用的类之后，我们就会立刻调用闭包中的代码。</p>
+<p>苹果是这么解释 <a href="https://developer.apple.com/library/ios/documentation/Swift/Conceptual/Swift_Programming_Language/AutomaticReferenceCounting.html#//apple_ref/doc/uid/TP40014097-CH20-ID57" target="_blank" rel="external">Unowned 引用</a></p>
+<blockquote>
+<p>当封闭和捕获的实例将始终引用时，将闭包中的捕获定义为一个 Unowned ，并且这个变量将始终在同一时间被释放。</p>
+</blockquote>
+<p>如果你知道你的引用将会清空，同时对这个变量的多次依赖彼此都是互相依赖。（其中的一个在另一个不存在的时候无法保留）那么你最好使用 Unowned 而不是 weak。因为你不会处理这些非必要的引用并将引用指针置空。</p>
+<p>对于最简单的或者说最好的地方来使用 Unowned。是在闭包中通过懒定义就像下面的代码一样。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">class Kraken &#123;</div><div class="line">    let petName = &quot;Krakey-poo&quot;</div><div class="line">    lazy var businessCardName: () -&gt; String = &#123; [unowned self] in</div><div class="line">        return &quot;Mr. Kraken AKA &quot; + self.petName</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在上面的代码中我们需要使用 Unowned 来阻止循环引用。<code>Kraken</code> 这个类在他的生命周期中持有了 <code>businessCardName</code> 这个成员变量的闭包，同时 <code>businessCardName</code> 在他的生命周期中也持有了 <code>Kraken</code> 的 self 这个变量。他们是彼此依赖的，所以他们就会同时被释放。因为这是最满足 Unowned 的规则。</p>
+<p>然而，这样的情况下我们 <strong><em>不需要</em></strong> 考虑是否需要在这样的懒加载的情况中加入 unowned。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">class Kraken &#123;</div><div class="line">    let petName = &quot;Krakey-poo&quot;</div><div class="line">    lazy var businessCardName: String = &#123;</div><div class="line">        return &quot;Mr. Kraken AKA &quot; + self.petName</div><div class="line">    &#125;()</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>[unowned self] 在这里是不需要的，因为对于懒加载的变量。他不会被 retains。（译者注：因为前面的是闭包，而这个是在创建 String 的闭包中）该变量在第一次调用结束后，自己控制内存的分配和释放。（同时自己管理了自己的引用计数。）下图是我调用它的一个截图。这个截图来自评论区的 <code>Алексей</code>。</p>
+<p><img src="https://static1.squarespace.com/static/5592eb03e4b051859f0b377f/t/55cba3aae4b04e605ee3065f/1439409067643/?format=2500w" alt="String"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>循环引用，在我们日常的代码过程中需要十分注意，并且要考虑到底要使用哪一种引用。其中内存的泄露和释放内存可以通过 weak 和 Unowned 来进行避免。我希望这篇文章对你的成长有一定的帮助。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/28/译-使用CommonCrypto进行AES的正确加密/" rel="next" title="[译]使用CommonCrypto对文字进行AES的加密">
+                <i class="fa fa-chevron-left"></i> [译]使用CommonCrypto对文字进行AES的加密
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/09/Socket-开发看这一篇就够了/" rel="prev" title="Socket 开发看这一篇就够了">
+                Socket 开发看这一篇就够了 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#让我们开始吧"><span class="nav-number">1.</span> <span class="nav-text">让我们开始吧</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ARC"><span class="nav-number">1.1.</span> <span class="nav-text">ARC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#STRONG"><span class="nav-number">1.2.</span> <span class="nav-text">STRONG</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WEAK-和-UNOWNED"><span class="nav-number">2.</span> <span class="nav-text">WEAK 和 UNOWNED</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#WEAK"><span class="nav-number">2.1.</span> <span class="nav-text">WEAK</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UNOWNED"><span class="nav-number">2.2.</span> <span class="nav-text">UNOWNED</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

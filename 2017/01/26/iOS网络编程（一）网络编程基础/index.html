@@ -1,0 +1,700 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS,网络,Network Extension," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="由于iOS 9以后苹果开放了Network Extension这个互联网的库，而我自己也想做一个VPN，在互联网上对相关的资料进行搜索，比如说Specht和该作者的数据传输库NEKit等相关资料的搜索，在这对VPN开发进行一个总结或者学习的归纳。 基本概念 虽然苹果开放了Network Extension这个库，但是这只是方便了我们能够方便的创建一个代理，但是相对的，对应tunnel-&amp;gt;so">
+<meta name="keywords" content="iOS,网络,Network Extension">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS网络编程（一）网络编程基础">
+<meta property="og:url" content="http://yoursite.com/2017/01/26/iOS网络编程（一）网络编程基础/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="由于iOS 9以后苹果开放了Network Extension这个互联网的库，而我自己也想做一个VPN，在互联网上对相关的资料进行搜索，比如说Specht和该作者的数据传输库NEKit等相关资料的搜索，在这对VPN开发进行一个总结或者学习的归纳。 基本概念 虽然苹果开放了Network Extension这个库，但是这只是方便了我们能够方便的创建一个代理，但是相对的，对应tunnel-&amp;gt;so">
+<meta property="og:updated_time" content="2017-07-08T15:07:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS网络编程（一）网络编程基础">
+<meta name="twitter:description" content="由于iOS 9以后苹果开放了Network Extension这个互联网的库，而我自己也想做一个VPN，在互联网上对相关的资料进行搜索，比如说Specht和该作者的数据传输库NEKit等相关资料的搜索，在这对VPN开发进行一个总结或者学习的归纳。 基本概念 虽然苹果开放了Network Extension这个库，但是这只是方便了我们能够方便的创建一个代理，但是相对的，对应tunnel-&amp;gt;so">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/01/26/iOS网络编程（一）网络编程基础/"/>
+
+
+
+
+
+  <title>iOS网络编程（一）网络编程基础 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/26/iOS网络编程（一）网络编程基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS网络编程（一）网络编程基础</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-01-26T23:27:55+08:00">
+                2017-01-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>由于iOS 9以后苹果开放了<code>Network Extension</code>这个互联网的库，而我自己也想做一个VPN，在互联网上对相关的资料进行搜索，比如说<a href="https://github.com/zhuhaow/Specht" target="_blank" rel="external">Specht</a>和该作者的数据传输库<a href="https://github.com/zhuhaow/NEKit" target="_blank" rel="external">NEKit</a>等相关资料的搜索，在这对VPN开发进行一个总结或者学习的归纳。</p>
+<h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><ol>
+<li>虽然苹果开放了<code>Network Extension</code>这个库，但是这只是方便了我们能够方便的创建一个代理，但是相对的，对应tunnel-&gt;socket的转换还是需要我们自己进行处理的。</li>
+<li>简单而已，根据同事的介绍，苹果的VPN就是在手机中开启了一个服务，然后所有的流量都是通过这个服务进行区分发送，这样就能将手机中所有请求都根据我们自己的配置进行设置。</li>
+<li>苹果开放了3个主要的类型 <code>Network Extension Entitlement</code>、<code>Personal VPN</code>、<code>Network Tunneling Protocol Client</code>，而对于我们而言，需要创建的就是<code>Network Tunneling Protocol Client</code>，第二个<code>Personal VPN</code>基于的是<code>IPSec</code>协议和<code>IKEv2</code>协议，这里和我的需求不符合，所以暂时不在考虑范围内。而第一个<code>Network Extension Entitlement</code>目的是方便 wifi 连接，也不在我们的考虑范围内，所以也不作考虑。</li>
+<li>苹果在2016-11-10之后对于 apple developer 开放了<code>Network Extension</code>权限（原来需要进行邮件申请，填写好所有你想要获得的信息后，他才会给你一个反馈）。现在只需要在apple developer中创建<code>Provisioning Profiles</code>和<code>Identifiers</code>中的<code>App IDs</code>从而允许对应的app可以使用网络库。</li>
+</ol>
+<h3 id="网络编程——网络基础"><a href="#网络编程——网络基础" class="headerlink" title="网络编程——网络基础"></a>网络编程——网络基础</h3><ol>
+<li>完全限定域名（英语：Fully qualified domain name），<blockquote>
+<p>缩写为FQDN，又译为完全资格域名、完整领域名称，又称为绝对领域名称（absolute domain name）、 绝对域名，网域名称的一种，能指定其在域名系统 (DNS) 树状图下的一个确实位置。一个完全资格域名会包含所有域名级别，包括 顶级域名 和 根域名。完整网域名称这个名称的由来，是因为它没有模糊空间，只能用一种方式来解析。完整网域名称是因应互联网上需要一个统一识别方式而出现，在1980年代后期快速成长。<br>完整网域名称由主机名称与母网域名称两部分所组成，例如有一部服务器的本地主机名为myhost，而其母域名为example.com，那指向该服务器的完整网域名称就是myhost.example.com。虽然世界上可能有很多服务器的本地主机名是myhost，但myhost.example.com是唯一的，因此完整网域名称能识别该特定服务器。</p>
+</blockquote>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/网络/" rel="tag"># 网络</a>
+          
+            <a href="/tags/Network-Extension/" rel="tag"># Network Extension</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/31/Re从零开始创建基于cocoapods的第三方库/" rel="next" title="Re:从零开始创建基于cocoapods的第三方库">
+                <i class="fa fa-chevron-left"></i> Re:从零开始创建基于cocoapods的第三方库
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/26/iOS网络编程（二）IP、DNS相关/" rel="prev" title="iOS网络编程（二）IP、DNS相关">
+                iOS网络编程（二）IP、DNS相关 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text">基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#网络编程——网络基础"><span class="nav-number">2.</span> <span class="nav-text">网络编程——网络基础</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

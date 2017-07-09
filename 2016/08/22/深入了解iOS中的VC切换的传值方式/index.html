@@ -1,0 +1,757 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="由于上次面试中有提到相关内容，所以这次我专门深入研究了iOS的几种方式：首先把所有的传值方式都列出来，如果有遗漏，请指正  首先列出iOS中使用的传值方式：  init 传值（即在创建VC的时候就对响应的参数进行设置） property 传值（即属性赋值） Router 传值（这个在OC中被使用，因为作者没有写Swift版本，所以先开个坑，估计我会填坑） Delegate 传值（通过协议和代理传值">
+<meta name="keywords" content="iOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入了解iOS中VC切换的传值方式">
+<meta property="og:url" content="http://yoursite.com/2016/08/22/深入了解iOS中的VC切换的传值方式/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="由于上次面试中有提到相关内容，所以这次我专门深入研究了iOS的几种方式：首先把所有的传值方式都列出来，如果有遗漏，请指正  首先列出iOS中使用的传值方式：  init 传值（即在创建VC的时候就对响应的参数进行设置） property 传值（即属性赋值） Router 传值（这个在OC中被使用，因为作者没有写Swift版本，所以先开个坑，估计我会填坑） Delegate 传值（通过协议和代理传值">
+<meta property="og:updated_time" content="2016-12-25T07:26:08.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入了解iOS中VC切换的传值方式">
+<meta name="twitter:description" content="由于上次面试中有提到相关内容，所以这次我专门深入研究了iOS的几种方式：首先把所有的传值方式都列出来，如果有遗漏，请指正  首先列出iOS中使用的传值方式：  init 传值（即在创建VC的时候就对响应的参数进行设置） property 传值（即属性赋值） Router 传值（这个在OC中被使用，因为作者没有写Swift版本，所以先开个坑，估计我会填坑） Delegate 传值（通过协议和代理传值">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/08/22/深入了解iOS中的VC切换的传值方式/"/>
+
+
+
+
+
+  <title>深入了解iOS中VC切换的传值方式 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/22/深入了解iOS中的VC切换的传值方式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">深入了解iOS中VC切换的传值方式</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-22T08:28:00+08:00">
+                2016-08-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">programming</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>由于上次面试中有提到相关内容，所以这次我专门深入研究了iOS的几种方式：<br>首先把所有的传值方式都列出来，如果有遗漏，请指正</p>
+<hr>
+<p>首先列出iOS中使用的传值方式：</p>
+<ol>
+<li>init 传值（即在创建VC的时候就对响应的参数进行设置）</li>
+<li>property 传值（即属性赋值）</li>
+<li>Router 传值（这个在OC中被使用，因为作者没有写Swift版本，所以先开个坑，估计我会填坑）</li>
+<li>Delegate 传值（通过协议和代理传值）</li>
+<li>闭包（block）传值  （通过swift中的闭包，类似于OC中的block传值）</li>
+<li>Notification 传值 （通过消息中心进行传值）</li>
+<li>KVO 传值  （通过观察者模式进行传值）</li>
+<li>AppDelegate 传值 通过Appdelegate进行传值</li>
+<li>NSUserDefault 传值 通过NSUserDefault传值</li>
+<li>通过static进行全局变量的存储，这里就不再进行演示</li>
+</ol>
+<p>基本上总结起来就是以上10种，接下来我会一种种介绍，同时会讲明传值方式中所遇到的坑。</p>
+<p>本文中的所有代码已经放到github上，我会在文章最后加上github地址，所以在文章中只展示主要的代码。</p>
+<h2 id="一、init-传值"><a href="#一、init-传值" class="headerlink" title="一、init 传值"></a>一、init 传值</h2><p>这个解释起来很简单，就是在VC对象init的时候，通过调用自定义的init函数，从而将所需要的参数传入对应的对象内。</p>
+<p><strong>实现代码如下：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">//源VC</div><div class="line">func jumpToNextVC() &#123;</div><div class="line">    let goal = TVGoalViewController.init(text: self.input.text!)</div><div class="line">    navigationController?.pushViewController(goal, animated: true)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//目标VC</div><div class="line">convenience init(text:String) &#123;</div><div class="line">    self.init(nibName:nil, bundle:nil)</div><div class="line">    self.text.text = text</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>很明显，这种传值方式有着较高的耦合，对后期的维护有一定的影响，所以个人不建议。（虽然我在一开始写代码的时候很不要脸的这么干的~~）</p>
+<h2 id="二、property-传值（即属性赋值）"><a href="#二、property-传值（即属性赋值）" class="headerlink" title="二、property 传值（即属性赋值）"></a>二、property 传值（即属性赋值）</h2><p>property传值就是通过在创建完VC后，对VC中的每个属性都单独复制。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">//源VC:</div><div class="line">func jumpToNextViewController() &#123;</div><div class="line">    let goal = TVGoal2ViewController()</div><div class="line"></div><div class="line">    goal.showlabel.text = self.input.text</div><div class="line"></div><div class="line">    self.navigationController?.pushViewController(goal, animated: true)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>优缺点：虽然相较上一种方式来说，解了耦合，但是因为要在原VC中进行赋值，所以需要目标VC中的相应属性设置为Public，这对于代码的安全性有一定的影响。</p>
+<h2 id="三、Router-传值"><a href="#三、Router-传值" class="headerlink" title="三、Router 传值"></a>三、Router 传值</h2><p>这种方式在OC中有一定的用到，但是比较冷门，主要的方式通过一个单独的类来保存所有需要跳转的VC，同时将值保存在对应的params。从而通过类的函数对类进行转换，这个因为原作者只有OC版本，所以这里就不贴上OC代码，估计我会在接下来几天将这个函数移植到swift上。</p>
+<p>优缺点：由于通过类来保存需要的内容，这样就解耦了，不过由于要引入第三方类，所以操作相对而言比较繁琐，而且需要学习第三方框架的函数，所以有一定的学习成本。</p>
+<h3 id="四、Delegate-传值"><a href="#四、Delegate-传值" class="headerlink" title="四、Delegate 传值"></a>四、Delegate 传值</h3><p>这种方式在iOS开发中是比较常见的几种方法之一，而且苹果官方也大量的使用这个方法，比如说AppDelegate。同时在UITextField，UIScrollView等控件中也经常性的使用这种方法传值。</p>
+<p>苹果官方对Delegate有以下的解释：</p>
+<blockquote>
+<p>Delegation is a simple and powerful pattern in which one object in a program 1 acts on behalf of, or in coordination with, another object. The delegating object keeps a reference to the other object—the delegate—and at the appropriate time sends a message to it. The message informs the delegate of an event that the delegating object is about to handle or has just handled. The delegate may respond to the message by updating the appearance or state of itself or other objects in the application, and in some cases it can return a value that affects how an impending event is handled. The main value of delegation is that it allows you to easily customize the behavior of several objects in one central object.</p>
+</blockquote>
+<p>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div></pre></td><td class="code"><pre><div class="line">//原VC文件</div><div class="line">protocol LoginDelegate &#123;</div><div class="line">    func changeText(name:String)</div><div class="line">&#125;</div><div class="line"></div><div class="line">class TVLoginViewController: UIViewController &#123;</div><div class="line"></div><div class="line">    @IBOutlet weak var label: UITextField!</div><div class="line">    @IBOutlet weak var loginButton: UIButton!</div><div class="line">    var delegate:LoginDelegate?</div><div class="line"></div><div class="line">    override func viewDidLoad() &#123;</div><div class="line">        super.viewDidLoad()</div><div class="line"></div><div class="line">        self.loginButton.addTarget(self, action: #selector(clickLogin), forControlEvents: UIControlEvents.TouchUpInside)</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    func clickLogin() &#123;</div><div class="line">        self.delegate?.changeText(self.label.text!)</div><div class="line">        self.navigationController?.popViewControllerAnimated(true)</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">//目标VC文件</div><div class="line">class TVDelegateViewController: UIViewController,LoginDelegate&#123;</div><div class="line">    @IBOutlet weak var welcomeLabel: UILabel!</div><div class="line">    @IBOutlet weak var login: UIButton!</div><div class="line"></div><div class="line">    override func viewDidLoad() &#123;</div><div class="line">        super.viewDidLoad()</div><div class="line"></div><div class="line">        login.addTarget(self, action: #selector(next), forControlEvents: UIControlEvents.TouchUpInside)</div><div class="line">	&#125;</div><div class="line"></div><div class="line">    func changeText(name: String) &#123;</div><div class="line">        self.welcomeLabel.text = &quot;欢迎回来：&quot;+name</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    func next() &#123;</div><div class="line">        let goal = TVLoginViewController()</div><div class="line">        goal.delegate = self</div><div class="line">        self.navigationController?.pushViewController(goal, animated: true)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>优缺点：个人来说，我比较看好delegate传值，因为他结构明显，清晰的语法定义，减少维护成本，较强的代码可读性。 同时减少代码的耦合性，使事件监听和事件处理相分离。 不需要创建第三方来监听事件和传输数据。 并且一个控制器可以实现多个代理，满足自定义开发需求，可选必选有较大的灵活性。但是由于需要创建协议，再进行编码，可能代码量比较大。</p>
+<h2 id="五、闭包传值"><a href="#五、闭包传值" class="headerlink" title="五、闭包传值"></a>五、闭包传值</h2><p>闭包传值类似于oc中的block传值。而苹果官方对于Block的解释是这样的：</p>
+<blockquote>
+<p>A block is an anonymous inline collection of code, and sometimes also called a “closure”.<br>Blocks are a powerful C-language feature that is part of Cocoa application development. They are similar to “closures” and “lambdas” you may find in scripting and programming languages such as Ruby, Python, and Lisp. Although the syntax and storage details of blocks might at first glance seem cryptic, you’ll find that it’s actually quite easy to incorporate blocks into your projects’ code.</p>
+</blockquote>
+<p>这说明闭包在实际使用中有着较大的使用面，不仅仅在oc中，在ruby，python，lisp中均有使用。同时由于实现它所需要的代码量相对于delegate更少，所以很多人都喜欢用（不过我不太喜欢）。<br>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">//原VC文件：</div><div class="line">typealias returnClosure = (string:String)-&gt;Void</div><div class="line">...</div><div class="line">func login() &#123;</div><div class="line">    if closureValue != nil &#123;</div><div class="line">        closureValue!(string: self.input.text!)</div><div class="line">    &#125;</div><div class="line">    self.navigationController?.popViewControllerAnimated(true)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//目标VC文件</div><div class="line">func myClosure(string:String) -&gt; Void &#123;</div><div class="line">    self.welcomeLabel.text = &quot;欢迎：&quot;+string</div><div class="line">&#125;</div><div class="line"></div><div class="line">func jump() &#123;</div><div class="line">    let goal = TVLogin1ViewController()</div><div class="line">    goal.closureValue = myClosure</div><div class="line">    self.navigationController?.pushViewController(goal, animated: true)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="六、Notification传值"><a href="#六、Notification传值" class="headerlink" title="六、Notification传值"></a>六、Notification传值</h2><p>Notification也是和上面的Delegate一样，在iOS开发中经常使用，他通过使用设计模式中的观察者模式，不过当其中一个内容进行变化的时候，通过NotificationCenter来接受内容变化，从而告诉需要告诉的人，原值已经发生改变了。</p>
+<p>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">//原VC文件：</div><div class="line">func logYouName() &#123;</div><div class="line">    let notific = NSNotification.init(name: &quot;loginNameNotification&quot;, object: self, userInfo: [&quot;name&quot;:name.text!])</div><div class="line"></div><div class="line">	NSNotificationCenter.defaultCenter().postNotification(notific)</div><div class="line"></div><div class="line">	self.navigationController?.popViewControllerAnimated(true)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//目标VC文件：</div><div class="line">func next() &#123;</div><div class="line">    let goal = TVLogin2ViewController()</div><div class="line"></div><div class="line">    NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(loginName), name: &quot;loginNameNotification&quot;, object: goal)</div><div class="line"></div><div class="line">    self.navigationController?.pushViewController(goal, animated: true)</div><div class="line">&#125;</div><div class="line"></div><div class="line">func loginName(notification:NSNotification) &#123;</div><div class="line">    let dic = notification.userInfo</div><div class="line"></div><div class="line">    self.welcomeButton.text = &quot;欢迎:&quot;+(String)(dic![&quot;name&quot;]!)</div><div class="line">    NSNotificationCenter.defaultCenter().removeObserver(self)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>优缺点：Notificatoin使用了设计模式中的观察者模式，这种模式的好处就是：使用简单，代码精简。同时解决了同时向多个对象监听相应的问题，当需要调用修改的内容的时候也十分方便。</p>
+<h2 id="七、KVO-传值"><a href="#七、KVO-传值" class="headerlink" title="七、KVO 传值"></a>七、KVO 传值</h2><p>这种传值和Notification的传值方法想法上面基本一致，都是通过设计模式中的观察者模式来进行实现的。不过区别是，一般来说Notification是作为一个第三者的单例来进行实现，而KVO是直接通过一个对象来观察另一个对象的值是否发生改变，观察者本身和被观察者不一定是要VC，只要是继承了NSObject即可实现该方法。</p>
+<p>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">//原来VC文件</div><div class="line">func login() &#123;</div><div class="line">    self.setValue(input.text, forKey: &quot;username&quot;)</div><div class="line">	self.navigationController?.popViewControllerAnimated(true)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//目标VC文件：</div><div class="line">override func viewDidLoad() &#123;</div><div class="line">    super.viewDidLoad()</div><div class="line"></div><div class="line">    loginButton.addTarget(self, action: #selector(login), forControlEvents: UIControlEvents.TouchUpInside)    </div><div class="line"></div><div class="line">    goal.addObserver(self, forKeyPath: &quot;username&quot;, options: [NSKeyValueObservingOptions.New,NSKeyValueObservingOptions.Old], context: nil)</div><div class="line">&#125;</div><div class="line"></div><div class="line">override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer&lt;Void&gt;) &#123;</div><div class="line">    if keyPath == &quot;username&quot; &#123;</div><div class="line">		self.welcomeLabel.text = &quot;欢迎&quot;+(String)((change!)[&quot;new&quot;]!)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>优缺点：优缺点和Notification大相近庭，不过在这里面使用的时候有个坑，当你在input输入相应的文字内容的时候，你需要在点击log之后，将文本中的内容进行保存，因为观察者不会对UITextField中的内容进行观察，所以很有可能发生问题。（个人不建议使用这个方法来用来观察需要手动输入的变量）</p>
+<h2 id="八、AppDelegate-传值"><a href="#八、AppDelegate-传值" class="headerlink" title="八、AppDelegate 传值"></a>八、AppDelegate 传值</h2><p>这个方法基于iOS App的实际创建方法，通过AppDelegate来唤起整个App，从而使得AppDelegate可以操控整个App，同时作为总控制，所有内部的类都能够通过UIApplication来获取Delegate，从而得到AppDelegate。所以可以通过他来进行值的传输。<br>代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">//源VC文件</div><div class="line">func next()  &#123;</div><div class="line">    let next = TVGoal3ViewController()</div><div class="line"></div><div class="line">    let selfDelegate = UIApplication.sharedApplication().delegate as! AppDelegate</div><div class="line"></div><div class="line">    selfDelegate.storeString = self.input.text!</div><div class="line"></div><div class="line">    self.navigationController?.pushViewController(next, animated: true)</div><div class="line">&#125;</div><div class="line"></div><div class="line">//目标VC文件</div><div class="line">override func viewDidLoad() &#123;</div><div class="line">    super.viewDidLoad()</div><div class="line"></div><div class="line">    let app = UIApplication.sharedApplication()</div><div class="line"></div><div class="line">    let selfDelegate = app.delegate as! AppDelegate</div><div class="line"></div><div class="line">    showLabel.text = selfDelegate.storeString</div><div class="line"></div><div class="line">    self.backButton.addTarget(self, action: #selector(goBack), forControlEvents: UIControlEvents.TouchUpInside)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>优缺点：由于通过AppDelegate来实现，基本上内容都保存在AppDelegate中，所以调用起来方便，由于都保存在那里面，导致整个AppDelegate显得臃肿，不方便与以后的维护。</p>
+<h2 id="九、NSUserDefault-传值"><a href="#九、NSUserDefault-传值" class="headerlink" title="九、NSUserDefault 传值"></a>九、NSUserDefault 传值</h2><p>苹果提供给开发者一个NSUserDefault这个系统变量，开发者可以通过这个来将内容保存到整个系统中，从而方便下一次的调用，这个和AppDelegate有异曲同工之妙。<br>代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">//源文件NSUserDefaults.standardUserDefaults().setObject(self.input.text, forKey: &quot;store&quot;)</div><div class="line"></div><div class="line">//目标文件</div><div class="line">let userdefault = NSUserDefaults.standardUserDefaults()</div><div class="line">self.showLabel.text = (String)(userdefault.valueForKey(&quot;store&quot;)!)</div></pre></td></tr></table></figure>
+<p>优缺点：主要和AppDelegate一样，不过因为是系统级的变量，所以他所给予我们的内存空间是有限的，不能存放太大的资料。（记得存储完同步下，方便以后继续使用）</p>
+<h2 id="十、全局变量Static-传值"><a href="#十、全局变量Static-传值" class="headerlink" title="十、全局变量Static 传值"></a>十、全局变量Static 传值</h2><p>这个和一般语言中都一样，由于Static存在于全局存储区（静态存储区），只要程序不退出，那么就会一直保存起来。这样的一个好处就是你可以反复使用，但是由于不释放，所以如果量一大，容易发生内存不足~~所以不建议使用。</p>
+<p>总结：以上就是所有10种iOS中的常见传值方式，他们各有各的优点，缺点，所以具体到底如何使用，还是需要开发者自己甄别。</p>
+<p>最后贴上<a href="https://github.com/zkh90644/PassValueDemo" target="_blank" rel="external">Github地址</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/18/iOS内存管理机制及属性的应用/" rel="next" title="iOS内存管理机制及属性的应用">
+                <i class="fa fa-chevron-left"></i> iOS内存管理机制及属性的应用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/09/21/iOS core animated/" rel="prev" title="iOS Core Animation初学">
+                iOS Core Animation初学 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、init-传值"><span class="nav-number">1.</span> <span class="nav-text">一、init 传值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、property-传值（即属性赋值）"><span class="nav-number">2.</span> <span class="nav-text">二、property 传值（即属性赋值）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、Router-传值"><span class="nav-number">3.</span> <span class="nav-text">三、Router 传值</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#四、Delegate-传值"><span class="nav-number">3.1.</span> <span class="nav-text">四、Delegate 传值</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、闭包传值"><span class="nav-number">4.</span> <span class="nav-text">五、闭包传值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、Notification传值"><span class="nav-number">5.</span> <span class="nav-text">六、Notification传值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#七、KVO-传值"><span class="nav-number">6.</span> <span class="nav-text">七、KVO 传值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#八、AppDelegate-传值"><span class="nav-number">7.</span> <span class="nav-text">八、AppDelegate 传值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#九、NSUserDefault-传值"><span class="nav-number">8.</span> <span class="nav-text">九、NSUserDefault 传值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#十、全局变量Static-传值"><span class="nav-number">9.</span> <span class="nav-text">十、全局变量Static 传值</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

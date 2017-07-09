@@ -1,0 +1,697 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="[译]使用 CommonCrypto 对文字进行AES的加密原文链接:点我跳转  译者注：由于需要写一个基于 SOCKS 5 协议的代理软件，所以免不了对 SOCKS 5 协议的加密方式有一定的了解，这篇文章就是译者在翻阅读物中找到的不错的文章，希望能和大家分享。CommonCrypto 是一个 Mac 中自带的加密库，专门用来对相关的内容进行加密。  更新1：你现在可以从我的 github 下载">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[译]使用CommonCrypto对文字进行AES的加密">
+<meta property="og:url" content="http://yoursite.com/2017/03/28/译-使用CommonCrypto进行AES的正确加密/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="[译]使用 CommonCrypto 对文字进行AES的加密原文链接:点我跳转  译者注：由于需要写一个基于 SOCKS 5 协议的代理软件，所以免不了对 SOCKS 5 协议的加密方式有一定的了解，这篇文章就是译者在翻阅读物中找到的不错的文章，希望能和大家分享。CommonCrypto 是一个 Mac 中自带的加密库，专门用来对相关的内容进行加密。  更新1：你现在可以从我的 github 下载">
+<meta property="og:updated_time" content="2017-04-03T08:59:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="[译]使用CommonCrypto对文字进行AES的加密">
+<meta name="twitter:description" content="[译]使用 CommonCrypto 对文字进行AES的加密原文链接:点我跳转  译者注：由于需要写一个基于 SOCKS 5 协议的代理软件，所以免不了对 SOCKS 5 协议的加密方式有一定的了解，这篇文章就是译者在翻阅读物中找到的不错的文章，希望能和大家分享。CommonCrypto 是一个 Mac 中自带的加密库，专门用来对相关的内容进行加密。  更新1：你现在可以从我的 github 下载">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/28/译-使用CommonCrypto进行AES的正确加密/"/>
+
+
+
+
+
+  <title>[译]使用CommonCrypto对文字进行AES的加密 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/28/译-使用CommonCrypto进行AES的正确加密/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">[译]使用CommonCrypto对文字进行AES的加密</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-03-28T22:51:55+08:00">
+                2017-03-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="译-使用-CommonCrypto-对文字进行AES的加密"><a href="#译-使用-CommonCrypto-对文字进行AES的加密" class="headerlink" title="[译]使用 CommonCrypto 对文字进行AES的加密"></a>[译]使用 CommonCrypto 对文字进行AES的加密</h2><p>原文链接:<a href="http://robnapier.net/aes-commoncrypto" target="_blank" rel="external">点我跳转</a></p>
+<blockquote>
+<p>译者注：由于需要写一个基于 SOCKS 5 协议的代理软件，所以免不了对 SOCKS 5 协议的加密方式有一定的了解，这篇文章就是译者在翻阅读物中找到的不错的文章，希望能和大家分享。<br>CommonCrypto 是一个 Mac 中自带的加密库，专门用来对相关的内容进行加密。</p>
+</blockquote>
+<p>更新1：你现在可以从我的 <a href="https://github.com/rnapier/ios5ptl/tree/master/ch11/CryptPic/CryptPic" target="_blank" rel="external">github</a> 下载文章中所有的源代码。</p>
+<p>更新2：以下的内容，除非你想尝试去用你自己方式实现，否则你可以通过一个个很简单的方法，接入<a href="https://github.com/RNCryptor/RNCryptor" target="_blank" rel="external">RNCryptor</a>来自动的实现。</p>
+<p>我翻阅了很多使用<code>CCCrypt()</code>的小例子，但是不幸的是，其中大多数都是错误的，在我完成了我将要出版的书的前10章的时候，我认为我需要需要写一篇短文来帮助人们来搞清楚这些东西。这就像小旋风一样，但是这只是一些简单的小例子。如果你想要更加清楚的其中的内容。你可以在今年晚些的时候阅读<a href="http://www.wiley.com/WileyCDA/WileyTitle/productCd-1119961327.html" target="_blank" rel="external">这本书</a>来获得相关的内容.(微笑脸)</p>
+<p>在这当中最主要也必须写在前面的，就这秘钥。因为这在互联网上搜索相关的内容的过程中，所找到的内容总是错的。因为人们输入的不是一个AES的秘钥，因为秘钥中的熵差总是实在是太小了。直接把它作为 AES 的秘钥会导致你受到各种各样的攻击。特别是按照下面的代码来设置秘钥，这都是错误的行为。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// DO NOT DO THIS</div><div class="line">NSString *password = @&quot;P4ssW0rd!&quot;;</div><div class="line">char keyPtr[kCCKeySizeAES128];</div><div class="line">[password getCString:keyPtr maxLength:sizeof( keyPtr ) encoding:NSUTF8StringEncoding];</div><div class="line">// DO NOT DO THIS</div></pre></td></tr></table></figure>
+<p>这样设置秘钥容易收到很多攻击。同时他也不能应对一些频繁的变化。如果<code>密码</code>比秘钥还要长，那么加密后的密码将会被缩短。这就是为什么你需要设置一个正确的秘钥的重要性。</p>
+<p>首先你得<code>**</code>你的秘钥，这意味着你需要将一个随机数据加入到秘钥中，因此如果你将相同的数据使用相同的密码进行加密，最终产生的结果也是不一样的。再加入随机数组后，你需要对秘钥进行哈希化，这样最终获得结果肯定能够获得对应的长度。而做这个最正确的方法就是使用<code>PKCS #5(PBKDF2)</code>不幸的是，在 Mac OS X 10.7 之前，没有一个简单的方法来加密。所以在下面的代码中，都会建立在 10.7 以后。但是如果你想要一个简单的解决方法。只要增加8个随机字符到字符串中，同时调用 <code>hash</code> 函数。在那之后再调用一次 <code>hash</code> 加密，这样重复 100,000 次。取秘钥中较低 “X” 位。虽然这不是很完美，但是这是一个简单的方法来编码实现它。在 MacBook Pro 的 Mac OS X 上面将花费 100ms，在相同时间的情况下 iPhone 4 上面大概只能实现 10,000 次。这个这目的只是为了让攻击者能够花费更多的时间来破解。</p>
+<p>（如果你有更好的或者更加快速且简单的加密方法，请在下面留言）</p>
+<p>但是就像我所说的，你不需要这么做，因为 <code>PBKDF2</code> 已经加入到 <code>CommonCrypto</code>(在iOS 10.7之后)。在进行混淆之后，你的密码和你秘钥的长度都会产生，先别着急写代码。在接下去的内容，我讲告诉你如何去进行编码。</p>
+<p>我没提到过 <code>CommonCrypto</code> 是一个<a href="http://opensource.apple.com/source/CommonCrypto" target="_blank" rel="external">开源</a>的么？所以如果你希望在其他平台上使用 <code>PBKDF2</code>，你可以通过源码来了解他的实现方式。</p>
+<p>好了，现在你已经混淆了他，接下来我们要做什么？把密文保存下来，因为之后你可能需要对它进行解密。已经被混淆了的数据会被认为是公共信息，所以你不需要保护他。</p>
+<p>大家可能会对神秘的初始化向量（IV）(前缀的字符串)感到迷惑。在 CBC模式 下每16个字节进行加密后会影响后面16个字节的加密。这很棒，这使得我们的加密更加安全有效。而且这种情况是默认的。但是其中的问题就是。对于开始的那几个字符，我们怎么处理？解决方案就是使用随机块-1，那就是添加前缀字符串。</p>
+<p>这个初始化向量在 <code>CCCrypt()</code> 函数中被列为可选的。这又会让人感到费解，因为真正的 CBC模式中的这个值是不可选的。如果你没有提供这个选项。他将会使用全为0的向量给你。这将会对第一个数据块进行保护，但是没有这个必要这么做。因为前缀字符串只是个简单的16个随机字节。“将这16个字节保存下来，因为接下来的解密中，你将会需要这段内容。这些内容也考虑到了公共信息，所以你不需要对他采取保护措施。”</p>
+<p>好了现在我们将会继续我们的加密，让我们来看下下面的小练习。首先，你需要知道如何使用它。这个方法将会返回已经加密的数据（如果失败，那么返回nil）同时返回对应的前缀字符串的数据，混淆之后的内容和加密错误的错误信息的引用。将所有数据，IV，混淆的内容用一种你觉得简单的方法写到文件中。其中 IV 已经被 AES 加密，混淆的内容的长度可能会不一样，但是我的代码中，我都会将设置为8个字节长，因为这是 PKCS#5 需要的最小长度。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">NSData *iv;</div><div class="line">NSData *salt;</div><div class="line">NSError *error;</div><div class="line">NSData *encryptedData = [RNCryptManager encryptedDataForData:plaintextData</div><div class="line">            password:password</div><div class="line">                  iv:&amp;iv</div><div class="line">                salt:&amp;salt</div><div class="line">              error:&amp;error];</div></pre></td></tr></table></figure>
+<p>然后接下来的代码。我将会把解密方法作为读者可以使用的一个练习，这些内容在一定意义上是共通的，你最好理解其中的代码，而不仅仅是简单的复制。不要忘记加入 Security.framework 这个库</p>
+<p>接下来就是代码<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div></pre></td><td class="code"><pre><div class="line">#import &lt;CommonCrypto/CommonCryptor.h&gt;</div><div class="line">#import &lt;CommonCrypto/CommonKeyDerivation.h&gt;</div><div class="line"></div><div class="line">NSString * const</div><div class="line">kRNCryptManagerErrorDomain = @&quot;net.robnapier.RNCryptManager&quot;;</div><div class="line"></div><div class="line">const CCAlgorithm kAlgorithm = kCCAlgorithmAES128;</div><div class="line">const NSUInteger kAlgorithmKeySize = kCCKeySizeAES128;</div><div class="line">const NSUInteger kAlgorithmBlockSize = kCCBlockSizeAES128;</div><div class="line">const NSUInteger kAlgorithmIVSize = kCCBlockSizeAES128;</div><div class="line">const NSUInteger kPBKDFSaltSize = 8;</div><div class="line">const NSUInteger kPBKDFRounds = 10000;  // ~80ms on an iPhone 4</div><div class="line"></div><div class="line">// ===================</div><div class="line"></div><div class="line">+ (NSData *)encryptedDataForData:(NSData *)data</div><div class="line">                        password:(NSString *)password</div><div class="line">                              iv:(NSData **)iv</div><div class="line">                            salt:(NSData **)salt</div><div class="line">                           error:(NSError **)error &#123;</div><div class="line">  NSAssert(iv, @&quot;IV must not be NULL&quot;);</div><div class="line">  NSAssert(salt, @&quot;salt must not be NULL&quot;);</div><div class="line"></div><div class="line">  *iv = [self randomDataOfLength:kAlgorithmIVSize];</div><div class="line">  *salt = [self randomDataOfLength:kPBKDFSaltSize];</div><div class="line"></div><div class="line">  NSData *key = [self AESKeyForPassword:password salt:*salt];</div><div class="line"></div><div class="line">  size_t outLength;</div><div class="line">  NSMutableData *</div><div class="line">  cipherData = [NSMutableData dataWithLength:data.length +</div><div class="line">                kAlgorithmBlockSize];</div><div class="line"></div><div class="line">  CCCryptorStatus</div><div class="line">  result = CCCrypt(kCCEncrypt, // operation</div><div class="line">                   kAlgorithm, // Algorithm</div><div class="line">                   kCCOptionPKCS7Padding, // options</div><div class="line">                   key.bytes, // key</div><div class="line">                   key.length, // keylength</div><div class="line">                   (*iv).bytes,// iv</div><div class="line">                   data.bytes, // dataIn</div><div class="line">                   data.length, // dataInLength,</div><div class="line">                   cipherData.mutableBytes, // dataOut</div><div class="line">                   cipherData.length, // dataOutAvailable</div><div class="line">                   &amp;outLength); // dataOutMoved</div><div class="line"></div><div class="line">  if (result == kCCSuccess) &#123;</div><div class="line">    cipherData.length = outLength;</div><div class="line">  &#125;</div><div class="line">  else &#123;</div><div class="line">    if (error) &#123;</div><div class="line">      *error = [NSError errorWithDomain:kRNCryptManagerErrorDomain</div><div class="line">                                   code:result</div><div class="line">                               userInfo:nil];</div><div class="line">    &#125;</div><div class="line">    return nil;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  return cipherData;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// ===================</div><div class="line"></div><div class="line">+ (NSData *)randomDataOfLength:(size_t)length &#123;</div><div class="line">  NSMutableData *data = [NSMutableData dataWithLength:length];</div><div class="line"></div><div class="line">  int result = SecRandomCopyBytes(kSecRandomDefault,</div><div class="line">                                  length,</div><div class="line">                                  data.mutableBytes);</div><div class="line">  NSAssert(result == 0, @&quot;Unable to generate random bytes: %d&quot;,</div><div class="line">           errno);</div><div class="line"></div><div class="line">  return data;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// ===================</div><div class="line"></div><div class="line">// Replace this with a 10,000 hash calls if you don&apos;t have CCKeyDerivationPBKDF</div><div class="line">+ (NSData *)AESKeyForPassword:(NSString *)password</div><div class="line">                         salt:(NSData *)salt &#123;</div><div class="line">  NSMutableData *</div><div class="line">  derivedKey = [NSMutableData dataWithLength:kAlgorithmKeySize];</div><div class="line"></div><div class="line">  int</div><div class="line">  result = CCKeyDerivationPBKDF(kCCPBKDF2,            // algorithm</div><div class="line">                                password.UTF8String,  // password</div><div class="line">                                [password lengthOfBytesUsingEncoding:NSUTF8StringEncoding],  // passwordLength</div><div class="line">                                salt.bytes,           // salt</div><div class="line">                                salt.length,          // saltLen</div><div class="line">                                kCCPRFHmacAlgSHA1,    // PRF</div><div class="line">                                kPBKDFRounds,         // rounds</div><div class="line">                                derivedKey.mutableBytes, // derivedKey</div><div class="line">                                derivedKey.length); // derivedKeyLen</div><div class="line"></div><div class="line">  // Do not log password here</div><div class="line">  NSAssert(result == kCCSuccess,</div><div class="line">           @&quot;Unable to create AES key for password: %d&quot;, result);</div><div class="line"></div><div class="line">  return derivedKey;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/05/如何编写高质量的Objective-C代码/" rel="next" title="如何编写高质量的Objective-C代码">
+                <i class="fa fa-chevron-left"></i> 如何编写高质量的Objective-C代码
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/04/译-Swift中的Weak，Strong和Unowned/" rel="prev" title="[译]Swift中的Weak，Strong和Unowned">
+                [译]Swift中的Weak，Strong和Unowned <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#译-使用-CommonCrypto-对文字进行AES的加密"><span class="nav-number">1.</span> <span class="nav-text">[译]使用 CommonCrypto 对文字进行AES的加密</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

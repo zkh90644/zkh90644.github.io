@@ -1,0 +1,785 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS,内存， Memory," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="对于OC的使用者来说，最会被问到的就是iOS开发中的内存管理。而只要涉及到内存管理，就肯定会涉及到property。而且在平常iOS开发的面试中，我们也经常会被问到相关的问题。所以这次就结合我所见到的和自己对于属性的理解来进行简述，希望对你们有帮助。  在讲述属性前，我们需要对于iOS开发中的内存管理有一个初步的了解。 本文中的部分内容来源于：这里和这里还有部分来源于苹果官方文档。 iOS开发中">
+<meta name="keywords" content="iOS,内存， Memory">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS内存管理机制及属性的应用">
+<meta property="og:url" content="http://yoursite.com/2016/08/18/iOS内存管理机制及属性的应用/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="对于OC的使用者来说，最会被问到的就是iOS开发中的内存管理。而只要涉及到内存管理，就肯定会涉及到property。而且在平常iOS开发的面试中，我们也经常会被问到相关的问题。所以这次就结合我所见到的和自己对于属性的理解来进行简述，希望对你们有帮助。  在讲述属性前，我们需要对于iOS开发中的内存管理有一个初步的了解。 本文中的部分内容来源于：这里和这里还有部分来源于苹果官方文档。 iOS开发中">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1232160-0db68b7366e194e3.png?imageMogr2/auto-orient/strip%7CimageView2/2">
+<meta property="og:image" content="https://developer.apple.com/library/ios/releasenotes/ObjectiveC/RN-TransitioningToARC/Art/ARC_Illustration.jpg">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1801379-20918594e616e21d.png?imageMogr2/auto-orient/strip%7CimageView2/2">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/1801379-410bce0fa4a0ca69.png?imageMogr2/auto-orient/strip%7CimageView2/2">
+<meta property="og:updated_time" content="2016-12-25T07:25:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS内存管理机制及属性的应用">
+<meta name="twitter:description" content="对于OC的使用者来说，最会被问到的就是iOS开发中的内存管理。而只要涉及到内存管理，就肯定会涉及到property。而且在平常iOS开发的面试中，我们也经常会被问到相关的问题。所以这次就结合我所见到的和自己对于属性的理解来进行简述，希望对你们有帮助。  在讲述属性前，我们需要对于iOS开发中的内存管理有一个初步的了解。 本文中的部分内容来源于：这里和这里还有部分来源于苹果官方文档。 iOS开发中">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/1232160-0db68b7366e194e3.png?imageMogr2/auto-orient/strip%7CimageView2/2">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/08/18/iOS内存管理机制及属性的应用/"/>
+
+
+
+
+
+  <title>iOS内存管理机制及属性的应用 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/18/iOS内存管理机制及属性的应用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS内存管理机制及属性的应用</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-18T19:21:50+08:00">
+                2016-08-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">programming</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>对于OC的使用者来说，最会被问到的就是iOS开发中的内存管理。而只要涉及到内存管理，就肯定会涉及到property。而且在平常iOS开发的面试中，我们也经常会被问到相关的问题。所以这次就结合我所见到的和自己对于属性的理解来进行简述，希望对你们有帮助。</p>
+</blockquote>
+<p>在讲述属性前，我们需要对于iOS开发中的内存管理有一个初步的了解。</p>
+<p>本文中的部分内容来源于：<a href="https://hit-alibaba.github.io/interview/iOS/ObjC-Basic/MM.html" target="_blank" rel="external">这里</a>和<a href="http://www.samirchen.com/ios-autorelease-pool/" target="_blank" rel="external">这里</a>还有部分来源于苹果官方文档。</p>
+<h2 id="iOS开发中的内存使用情况"><a href="#iOS开发中的内存使用情况" class="headerlink" title="iOS开发中的内存使用情况"></a>iOS开发中的内存使用情况</h2><ul>
+<li>栈（stack）：栈是编译器自动分配并释放，用来存放函数的参数，局部变量。</li>
+<li>堆（heap）：堆一般是程序员自己分配和释放，如果我们在使用的过程中，没有释放，那么等到程序完全结束，系统将会对堆中的内容进行回收。一般开发中的alloc就是存放在堆中的</li>
+<li>全局变量（静态变量）（static）：全局变量和静态变量是单独存放的，因为他们的声明周期和整个程序的生命周期一致。释放的时间是由整个程序结束后系统负责回收。</li>
+<li>文字常量区：一般用来存放常量字符串，比如说<code>String *str = @&quot;hello world&quot;</code>,他的释放也和全局变量一致，在程序结束后进行释放。</li>
+<li>程序代码区：用来存放函数的二进制内容的区域。</li>
+</ul>
+<p>他们之间的在内存中存放的关系如下图所示：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1232160-0db68b7366e194e3.png?imageMogr2/auto-orient/strip%7CimageView2/2" alt="内存管理"></p>
+<p>而在日常开发过程中，我们所遇到最多的也是最容易问到的就是<strong>堆</strong>和<strong>栈</strong>，可能有的人对于这两者还是很模糊，所以我再引用之前看到过的一段话来解释（由于很久以前看到了，已经忘记了出处，如果有人能够告诉我，我一定加上）：</p>
+<p>内管管理就像做菜，而<strong>堆</strong>的使用就像我们下馆子，我们只要去酒店，告诉老板我们要什么，他们就会帮我们准备好，我们只要吃完付钱，就可以了，也不用去管理那些之后的琐事。而<strong>栈</strong>就像我们自己做菜，什么东西都得自己买好，做什么，怎么做都得提前想好。做完之后还需要自己收拾最后的垃圾。</p>
+<h2 id="iOS内存管理机制"><a href="#iOS内存管理机制" class="headerlink" title="iOS内存管理机制"></a>iOS内存管理机制</h2><p>当你创建的对象的时候，你总得需要告诉操作系统，你将要在什么时候对占有这块内存的对象进行释放，就像平常生活中，你怎么才能确定这房间里面是有人的还是没有人的呢？</p>
+<p>一般来说，我们肯定会这么干，每个人进去的时候登记下，然后出来的时候再登记下，这样只要我们在需要管理的时候看下登记再按的人数是不是为0就可以了，只要为0，那么就说明里面没有人，否则就有人，苹果也是这么处理内存管理的。在你创建一个对象的时候，他会需要进行<code>retain</code>，然后在你不在持有他的时候进行<code>release</code>，所以每个对象都有一个<code>retain count</code>来进行计数。</p>
+<p>在iOS中有2套内存管理机制：MRC(MannulReference Counting)和ARC(Automatic Reference Counting)。其中ARC起源于iOS 4.3，在那之前，苹果开发者只能手动使用<code>retain</code>和<code>release</code>来进行内存管理。这样做的问题很明显，如果你在开发过程中，一个不小心没有<code>retain</code>和<code>release</code>成对出现，那么很容易使得内存没有释放，最后导致程序内存不足而导致闪退。</p>
+<p>对于ARC，苹果的官方文档是这么解释的：</p>
+<blockquote>
+<p>Automatic Reference Counting (ARC) is a compiler feature that provides automatic memory management of Objective-C objects. Rather than having to think about retain and release operations, ARC allows you to concentrate on the interesting code, the object graphs, and the relationships between objects in your application.</p>
+<p>ARC works by adding code at compile time to ensure that objects live as long as necessary, but no longer. Conceptually, it follows the same memory management conventions as manual reference counting (described in Advanced Memory Management Programming Guide) by adding the appropriate memory management calls for you.</p>
+</blockquote>
+<p>总的来说，主要意思就是ARC在本质上就像MRC一样，但是它能够让你花费更少的时间来考虑代码中的<code>retain</code>和<code>release</code>。与此同时，编译器能够帮你更加准确的将<code>retain</code>和<code>release</code>加在你代码中真正需要的地方。</p>
+<p>理解如下图：<br><img src="https://developer.apple.com/library/ios/releasenotes/ObjectiveC/RN-TransitioningToARC/Art/ARC_Illustration.jpg" alt="ARC &amp;&amp; MRC"></p>
+<p>有人可能会提到GC(Garbage Collection)——垃圾回收机制。在现在的iOS中GC没有被使用，而在MAC OS X中，GC是被使用的，不过对于GC，苹果是这么解释的：</p>
+<blockquote>
+<p>Garbage collection is deprecated in OS X Mountain Lion v10.8, and will be removed in a future version of OS X. Automatic Reference Counting is the recommended replacement technology. To aid in migrating existing applications, the ARC migration tool in Xcode 4.3 and later supports migration of garbage collected OS X applications to ARC</p>
+</blockquote>
+<p>总的来说ARC将在未来的某一天来取代GC在MAC中的位置。</p>
+<h2 id="property（属性）"><a href="#property（属性）" class="headerlink" title="property（属性）"></a>property（属性）</h2><p>就算理解的再多，我们还是要和实际相结合。实际运用中与之相对应的就是实例变量的属性。<br>由于 iOS 中 MRC已经太过于古老，在这就不再多提。</p>
+<p>在ARC中，我们创建实例变量经常是这样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">@property (atomic/nonatomic/assign/retain/strong/weak/unsafe_unretained/copy) Number* num</div></pre></td></tr></table></figure>
+<p>所以我们就为让这内容中的这几个property来进行解释。</p>
+<ul>
+<li>atomic:原子性，简单的解释就是说，他是线程安全的，但是由于线程安全，在操作的过程中，编译器会自己给他上锁，解锁。这样会造成资源的浪费（因为我们平常开发中不会那么频繁的考虑到线程安全这个问题）<strong>该属性为默认值</strong></li>
+<li>nonatomic:非原子性，这个和上面那个是双子星，但是他们正好相反，这个由于不安全的，但是因为没有了锁的问题，这样资源就会尽可能的被利用，所以我们在日常开发中使用这个，而对于他的安全性，我们一般都自己在后期开发的过程中，在使用多线程的过程中进行考虑。</li>
+<li>assign:给予了setter方法，assign一般指向一个不是指针指向的对象，比如说<code>CGFloat</code>这类值。（关于<code>assign</code>和<code>weak</code>在delegate中的区别将会在后面提到）</li>
+<li>retain:<code>retain</code>用于指向一个有指针的对象，就像MRC中的retain，他是为了增加<code>retain count</code>，这样使得对象能够在<code>autoreleasepool</code>中持有内存</li>
+<li>strong:<code>strong</code>是在ARC中用来代替<code>retain</code>的，所以原理相同，即<code>retain count</code>加一</li>
+<li>weak:<code>weak</code>和<code>strong</code>一般只要懂一点英语的就知道，他们又是一堆双子星，<code>strong</code>是表示持有，而<code>weak</code>表示，只是简单的引用。这意味着等到持有<code>weak</code>的对象呗释放的时候，<code>weak</code>表示的对象也被释放。而需要注意的是<code>weak</code>释放后他就会为nil。</li>
+<li>unsafe_unretained:<code>unsafe_unretained</code>一般很少被用到，主要的原因是他一般用于在Cocoa底层的那些不能支持<code>weak</code>属性的变量，比如说<code>NSTextView</code>，<code>NSFont</code> ，<code>NSColorSpace</code>等。而他和weak不同的地方是，持有<code>weak</code>的对象被释放后，<code>weak</code>对象会被指向nil，而<code>unsafe_unretained</code>则不会被指向为nil。这样就有了安全隐患。</li>
+<li>copy:<code>copy</code>一般我们用在<code>NSString</code>，<code>NSArray</code>，<code>NSDictionary</code>，而原因就是copy会在复制的时候讲源对象进行拷贝。这样他只想的将会是一个新的，<code>retain count</code>为1的对象。这样在我们对于这个对象的内容进行修改的时候，它将不会影响到原来的那个对象。</li>
+</ul>
+<p>除了这几种之外，我们还有4种属性没有提到</p>
+<ul>
+<li>getter:设置getter方法</li>
+<li>setter:设置setter方法</li>
+<li>readonly:只读</li>
+<li>readwrite：可读写</li>
+</ul>
+<p>这四种因为可以根据字面意思来进行设置在这就不进行过多的介绍。</p>
+<p>这里再补上一句之前提到的问题：</p>
+<blockquote>
+<p>关于为什么使用<code>weak</code>而不是用<code>assign</code>来对delegate进行标注。</p>
+</blockquote>
+<p>首先delegate一般的类型都是id，即可以指向所有对象的<code>id</code>类型。所以我们既可以使用assign指向他，也可以使用weak指向他。但是因为weak在不被持有的时候会指向nil，而大家都知道，所有通过nil的方法在调用函数的时候，都会返回为nil，这样就能够保证了程序的稳定性，就算没有东西返回，他还是能够正常解析（只是解析出来的值为nil）。而如果使用assign的话，如果一不持有他。那么下次再调用它的时候，他将会指向一个不知名的地址，即野指针。这样就会使得整个程序crash。</p>
+<h2 id="autoreleasepool（自动释放池）"><a href="#autoreleasepool（自动释放池）" class="headerlink" title="autoreleasepool（自动释放池）"></a>autoreleasepool（自动释放池）</h2><p>既然扯到release，那就不得不提下autoreleasepool，顾名思义，他就是一个用来自动帮你释放的池子（这特么不是废话么）。一般情况下我们不怎么会去使用它，因为在AppKit和UIKit的框架中，事情基本上默认的放在<code>autorelease pool block</code>中完成的。这样子当你完成这些内容后，对应在内存中的数据就会自动释放，这样就不需要你手动去处理这些数据，从而保证了程序的安全性。</p>
+<p>当然这里也提到了这是在使用AppKit和UIKit的情况下。我们仍然有以下这几种情况来使用autoreleasepool的情况：</p>
+<ol>
+<li>编写的是命令行程序，不基于UI框架</li>
+<li>当你需要写一个循环，循环里面有很多临时变量的时候</li>
+<li>当你大量使用辅助线程</li>
+</ol>
+<p>总的来说autoreleasepool是为了尽可能的减少无用变量在内存中的占用情况。从而使得程序所需要的内存更少。至于autoreleasepool的释放时间，这就要涉及到runloop，具体内容可以参见sunnyxx大神的<a href="http://blog.sunnyxx.com/2014/10/15/behind-autorelease/" target="_blank" rel="external">这篇文章</a>，相信对你肯定有很大帮助。</p>
+<h2 id="循环引用"><a href="#循环引用" class="headerlink" title="循环引用"></a>循环引用</h2><p>循环引用对于内存来说是一个大问题。这个问题我们更多的在block中可能会碰到，不过总结起来就是这么一句话：</p>
+<blockquote>
+<p>A对象持有B，那么B的<code>retain count</code> 为1，而此时A因为被其他变量持有，所有A的<code>retain Count</code>为1，而B又要引用A，那么A的<code>retain count</code>又要加一，这样等到持有A的那个对象释放A的时候，就算A的<code>retain count</code>减一，但还是为1，所以无法释放，而因为A无法释放，导致B也无法成功释放，而外部没有持有A或B中的任意一个，这样就导致了这块内存空间一直被持有。</p>
+</blockquote>
+<p>图示如下：<br><img src="http://upload-images.jianshu.io/upload_images/1801379-20918594e616e21d.png?imageMogr2/auto-orient/strip%7CimageView2/2" alt="循环引用1"><br><img src="http://upload-images.jianshu.io/upload_images/1801379-410bce0fa4a0ca69.png?imageMogr2/auto-orient/strip%7CimageView2/2" alt="循环引用2"></p>
+<p>具体的问题我将会在解释block的时候具体说明，需要知道的一点就是，如果存在循环引用，那么就需要把循环引用中间的一条线断掉，从而使用weak来代替，使得当strong的一方被释放的时候，weak也能被</p>
+<p>希望以上文章能够对你有所帮助。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/内存，-Memory/" rel="tag"># 内存， Memory</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/09/Swift中第三方Sqlite3框架SQLite.swift使用/" rel="next" title="Swift中第三方Sqlite3框架SQLite.swift使用">
+                <i class="fa fa-chevron-left"></i> Swift中第三方Sqlite3框架SQLite.swift使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/22/深入了解iOS中的VC切换的传值方式/" rel="prev" title="深入了解iOS中VC切换的传值方式">
+                深入了解iOS中VC切换的传值方式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS开发中的内存使用情况"><span class="nav-number">1.</span> <span class="nav-text">iOS开发中的内存使用情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iOS内存管理机制"><span class="nav-number">2.</span> <span class="nav-text">iOS内存管理机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#property（属性）"><span class="nav-number">3.</span> <span class="nav-text">property（属性）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#autoreleasepool（自动释放池）"><span class="nav-number">4.</span> <span class="nav-text">autoreleasepool（自动释放池）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#循环引用"><span class="nav-number">5.</span> <span class="nav-text">循环引用</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

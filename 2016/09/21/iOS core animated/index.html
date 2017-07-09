@@ -1,0 +1,857 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS,Core Animation," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="动画  直接动画     12UIView.animateWithDuration(0.5, delay: 0.5, options: [], animations: &amp;#123;    &amp;#125;, completion: nil)  spring弹簧效果  12345UIView.animateWithDuration(0.33, delay: 0.0, usingSpringWithDa">
+<meta name="keywords" content="iOS,Core Animation">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS Core Animation初学">
+<meta property="og:url" content="http://yoursite.com/2016/09/21/iOS core animated/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="动画  直接动画     12UIView.animateWithDuration(0.5, delay: 0.5, options: [], animations: &amp;#123;    &amp;#125;, completion: nil)  spring弹簧效果  12345UIView.animateWithDuration(0.33, delay: 0.0, usingSpringWithDa">
+<meta property="og:updated_time" content="2016-12-25T07:25:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS Core Animation初学">
+<meta name="twitter:description" content="动画  直接动画     12UIView.animateWithDuration(0.5, delay: 0.5, options: [], animations: &amp;#123;    &amp;#125;, completion: nil)  spring弹簧效果  12345UIView.animateWithDuration(0.33, delay: 0.0, usingSpringWithDa">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/09/21/iOS core animated/"/>
+
+
+
+
+
+  <title>iOS Core Animation初学 | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/21/iOS core animated/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS Core Animation初学</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-09-21T11:30:50+08:00">
+                2016-09-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">programming</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ol>
+<li><p>动画</p>
+<ul>
+<li>直接动画</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="type">UIView</span>.animateWithDuration(<span class="number">0.5</span>, delay: <span class="number">0.5</span>, options: [], animations: &#123;</div><div class="line">    &#125;, completion: <span class="literal">nil</span>)</div></pre></td></tr></table></figure>
+</li>
+<li><p>spring弹簧效果</p>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">UIView.animateWithDuration(0.33, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.0, options: [], animations: &#123;</div><div class="line">    //code</div><div class="line">    &#125;, completion: &#123;_ in</div><div class="line">    //code</div><div class="line">    &#125;)</div></pre></td></tr></table></figure>
+<ul>
+<li><p>使用关键帧</p>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">UIView.addKeyframeWithRelativeStartTime(0.0, relativeDuration: 0.25, animations: &#123;</div><div class="line">self.planeImage.center.x += 80.0</div><div class="line">self.planeImage.center.y -= 10.0 &#125;)</div></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li><p>通过<code>CGAffineTransformIdentity</code>来将形变变回变形前的状态</p>
+</li>
+<li><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="type">CGAffineTransformConcat</span>(</div><div class="line"><span class="type">CGAffineTransformMakeScale</span>(<span class="number">1.0</span>, <span class="number">0.1</span>), <span class="comment">//缩放</span></div><div class="line"><span class="type">CGAffineTransformMakeTranslation</span>(<span class="number">0.0</span>, -auxLabelOffset)) &#125; <span class="comment">//位移</span></div><div class="line"><span class="comment">//绑定多个形变</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>4.<br>   <code>CGAffineTransformMakeRotation</code>来创建旋转形变</p>
+<ol>
+<li><figure class="highlight swift"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="type">UIView</span>.addKeyframeWithRelativeStartTime(<span class="number">0.0</span>, relativeDuration: <span class="number">0.25</span>, animations: &#123;</div><div class="line"><span class="keyword">self</span>.planeImage.center.x += <span class="number">80.0</span></div><div class="line"><span class="keyword">self</span>.planeImage.center.y -= <span class="number">10.0</span> &#125;)</div><div class="line"><span class="comment">//通过添加关键帧来设置每个时间，上面的第一个参数为在前面关键帧动画中的百分比</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>可以修改layer的参数来实现静态动画。</p>
+</li>
+<li><p>在使用autolayout的时候，可以通过设置对应的参数后使用layoutIfNeed来进行创建动画</p>
+</li>
+<li><p>通过设置<code>constraint.active = false</code>来设置对应的约束是否生效</p>
+</li>
+<li><p>通过创建CAAnimate对象来创建对应的动画，然后将对应的layer使用<code>setAnimation</code>来设置对应的内容，<code>key</code>为后期删除或者修改的时候来设置对应的动画。</p>
+</li>
+<li><p>通过通过设置CABasicAnimated的<code>fromValue</code>和<code>toValue</code>还有<code>duration</code>来设置动画效果。</p>
+</li>
+<li><p>通过CABasicAnimation的keyPath来确定修改的属性。</p>
+</li>
+<li><p>通过设置beginTime来设置开始的时间一般为(CACurrentMediaTime()+doubleNmber)</p>
+</li>
+<li><p><code>fillMode</code>用来设置是否在动画谦和后来进行显示。默认为none，一般设置为<code>KCAfillModeBoth</code>（这样动画前和动画后的操作都不会出现）</p>
+</li>
+<li><p>使用Animatation的实际操作是，隐藏原有对象，然后创建新图片对象，然后操作图片对象，等到图片对象运动完，然后继续显示原对象。（为了不显示原对象，可以设置<code>removeOnCompletion = false</code>来进行设置，但是无法操作。）</p>
+</li>
+<li><p>使用delegate来确定animation开始和结束的时间，同时通过KVC来进行设置对应的参数。</p>
+</li>
+<li><p>通过<code>layer.removeAnimationForKey</code>来删除对应的Animation</p>
+</li>
+<li><p>通过AnimationGroup来异步加载所有动画效果，然后通过将CABasicAnimation加入到group中，从而使得动画异步，通过timingFunction来设置动画的速度。</p>
+</li>
+<li><p>通过CABasicAnimation的repeatCount来设置对应的重复次数，或者通过autoreverses = true来使得不断重复</p>
+</li>
+<li><p>通过设置speed来调整原来的速度倍速。2为2倍，由于speed的存在，duration的实际时间为除以speed后的时间</p>
+</li>
+<li><p>通过设置layer.speed后，实际上的速度是animation.Speed * view.layer.speed的速度，而且layer的speed作用于他的子layer</p>
+</li>
+<li><p>UIKit(UIView.animationWithDuration)相对Core Animation更加强制。Core Animation可以设置更多参数，但是不能设置duration，duration会自行计算。</p>
+</li>
+<li><p>CASpringAnimation如果设置了duration，如果duration小于实际时长的话，那么当到达duration的话，就会直接跳到结束。可以用duration = pulse.settlingDuration 来进行设置</p>
+</li>
+<li><p>CASprintAnimation常见参数</p>
+</li>
+</ol>
+<ul>
+<li>damping为阻尼，默认为10</li>
+<li>mass为，默认为1<ul>
+<li>stiffness，默认为100</li>
+<li>initialivelocity，默认为0</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li><p>使用CAKeyframeAnimation来代替animationWithKeyframe，通过values来设置每一帧的值，通过keyTimes来设置对应的转动的百分比时间。</p>
+</li>
+<li><p>通过NSValue(CGPoint())来将CGPoint转化为value，如果需要转换的为数组，那么使用map{NSValue(CGPoint:$0)}</p>
+</li>
+<li><p>通过对layer进行添加animation来发生形变，同时通过UIView.durationWithAnimation中的complete，从而更加方便的进行回调。从而不需要调用delegate</p>
+</li>
+<li><p>通过CAGradientLayer来创建渐变图层，左上为（0，0）右下为（1，1），color属性设置颜色，locations属性设置颜色位置</p>
+</li>
+<li><p>通过layer.mask =  CALayer()，来设置对应的遮罩层，从而显示图像。</p>
+</li>
+<li><p>设置UIGraphicsBeginImageContextWithOptions中的scale为0，从而使得对应的图像分辨率为显示器的分辨率</p>
+</li>
+<li><p>通过使用CAShapeLayer来创建纯线的描绘，设置start和end，从而显示位置，为百分比。LineDashPattern的数组来设置哪几块绘制。</p>
+</li>
+<li><p>kCAAnimationDiscrete 是一帧一帧，每一帧都要代码计算得到，而kCAAnimationPaced则是平滑的动画效果。</p>
+</li>
+<li><p>对于重复的动画，使用CAReplicatorLayer()，然后将需要重复的内容加入其中，同时设置instanceCount(重复个数),instanceTransform(重复的位置),instanceDelay(重复内容的动画延迟时间)</p>
+</li>
+<li><p>通过CATransform3DIdentity，从而获得对应的齐次矩阵，然后设置透视角度，identity.m34 = -1.0/1000,一般为250~2000，小于250，因为太大而形变，大于2000，基本平行，则没感觉。然后通过CATransform3dMakeXXXX这类函数进行形变，对矩阵进行设置，从而变形对应的对象。</p>
+</li>
+<li><p>设置layer的sublayerTransform属性，从而使得所有子layer都遵守这个透视图。</p>
+</li>
+<li><p>对于layer的animation的操作，不仅仅要给予layer的动画效果，还要设置最后的transform后的效果。</p>
+</li>
+<li><p>对于粒子效果，可以通过创建CAEmitterLayer来创建</p>
+</li>
+</ol>
+<ul>
+<li>emitterShape:设置粒子效果（发射方向</li>
+<li>emitterPosition：喷射点<ul>
+<li>emitterSize：喷射区域大小</li>
+<li>emitterCells：粒子种类</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>CAEmitterCell来设置对应的粒子</li>
+</ol>
+<ul>
+<li>contents：图片样式</li>
+<li>birthRate：每秒产生个数<ul>
+<li>lifetime：每个生命周期</li>
+<li>lifetimeRange：声明周期误差（正负）</li>
+<li>yAcceleration：y轴加速度</li>
+<li>xAcceleration：x轴加速度</li>
+<li>velocity：初始速度</li>
+<li>emissionLongitude：初始方向</li>
+<li>velocityRange：速度误差值</li>
+<li>emissionRange：方向误差值</li>
+<li>redRange，greenRange，blueRange：红蓝绿的颜色类型</li>
+<li>scale：缩放</li>
+<li>scaleRange：缩放误差</li>
+<li>scaleSpeed：缩放速度</li>
+<li>alphaRange：透明度范围</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li><p>CGAffineTransformMakeScale(-1, 1)即将图片翻转</p>
+</li>
+<li><p>通过UIImageView.animationImages = [UIImages]来设置逐帧动画，animationDuration来设置动画时长,animationRepeatCount来设置重复次数，使用startAnimating来执行动画</p>
+</li>
+<li><p>UIViewController转换的方法：</p>
+</li>
+<li><p>首先创建对应的动画对象，遵守UIViewControllerAnimatedTransitioning协议</p>
+<ol>
+<li>在需要跳转的对应的VC上遵守UIViewControllerTransitioningDelegate协议</li>
+<li>重写animationControllerForPresentedController方法，返回需要调用的动画对象，</li>
+<li>在动画对象中transitionDuration，返回动画时间</li>
+<li>在animateTransition设置动画效果。</li>
+<li>基本思路是，fromVC刚开始被container所包裹（transitionContext)，一开始的时候，toVC不存在，这个时候需要创建，并将对应的VC加入到container中，在duration结束后，transitionContext.completeTransition(true)，从而告诉UIKit结束动画。</li>
+</ol>
+</li>
+<li><p>UINavigationController跳转动画，</p>
+</li>
+<li><p>创建对应的动画对象，遵守UIViewControllerAnimatedTransitioning协议</p>
+<ol>
+<li>在需要跳转的对应的VC上遵守UINavigationControllerTransitioningDelegate协议</li>
+<li>在navigationController方法总返回跳转对象transition，同时设置oepration方向（PUSH还是POP</li>
+<li>动画对象中设置duration时长和设置的动画。根据不同的operation的方向来决定动画效果。</li>
+<li>在animationTransition设置点动画效果</li>
+<li>同UIViewController</li>
+</ol>
+</li>
+<li><p>具有交互的跳转动画</p>
+</li>
+<li><p>动画对象继承UIPercentDrivenInteractiveTransition(不在使用继承NSObject)</p>
+<ol>
+<li><p>其余和上相同</p>
+</li>
+<li><p>根据手势的不同状态，比如说recgnizer.state调用updateInteractiveTransition(progress)//更新图像，让界面进行重绘</p>
+<p>startInteractiveTransition(progress)//开始更新图像图像</p>
+</li>
+</ol>
+</li>
+<li><p><strong>kCAFillModeRemoved</strong> 这个是默认值,也就是说当动画开始前和动画结束后,动画对layer都没有影响,动画结束后,layer会恢复到之前的状态<br><strong>kCAFillModeForwards</strong> 当动画结束后,layer会一直保持着动画最后的状态<br><strong>kCAFillModeBackwards</strong> 这个和kCAFillModeForwards是相对的,就是在动画开始前,你只要将动画加入了一个layer,layer便立即进入动画的初始状态并等待动画开始.你可以这样设定测试代码,将一个动画加入一个layer的时候延迟5秒执行.然后就会发现在动画没有开始的时候,只要动画被加入了layer,layer便处于动画初始状态<br><strong>kCAFillModeBoth</strong> 理解了上面两个,这个就很好理解了,这个其实就是上面两个的合成.动画加入后开始之前,layer便处于动画初始状态,动画结束后layer保持动画最后的状态.</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/Core-Animation/" rel="tag"># Core Animation</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/22/深入了解iOS中的VC切换的传值方式/" rel="next" title="深入了解iOS中VC切换的传值方式">
+                <i class="fa fa-chevron-left"></i> 深入了解iOS中VC切换的传值方式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/10/13/[译] Swift 3.0中不安全的世界 /" rel="prev" title="Swift 3.0中不安全的世界">
+                Swift 3.0中不安全的世界 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

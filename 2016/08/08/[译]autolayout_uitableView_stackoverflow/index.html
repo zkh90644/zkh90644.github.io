@@ -1,0 +1,757 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS,翻译,AutoLayout," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="由于昨天翻译的一篇内容是原作者在2014年写的，可能有点老。所以这次翻译的是stackoverflow中smileyborg解释的获得1.8k的回答：原文链接。  ###使用AutoLayout来动态显示UITableView中Cell的高度 TL;DR:(Too long,Don’t read，太长不看)如果你不想阅读内容，你可以直接跳转到这个github上简单的工程：  iOS 8工程 - 需">
+<meta name="keywords" content="iOS,翻译,AutoLayout">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS中使用autolayout来进行UITableView的布局(2)">
+<meta property="og:url" content="http://yoursite.com/2016/08/08/[译]autolayout_uitableView_stackoverflow/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="由于昨天翻译的一篇内容是原作者在2014年写的，可能有点老。所以这次翻译的是stackoverflow中smileyborg解释的获得1.8k的回答：原文链接。  ###使用AutoLayout来动态显示UITableView中Cell的高度 TL;DR:(Too long,Don’t read，太长不看)如果你不想阅读内容，你可以直接跳转到这个github上简单的工程：  iOS 8工程 - 需">
+<meta property="og:image" content="http://i.stack.imgur.com/CTUPi.png">
+<meta property="og:updated_time" content="2016-12-25T05:07:58.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS中使用autolayout来进行UITableView的布局(2)">
+<meta name="twitter:description" content="由于昨天翻译的一篇内容是原作者在2014年写的，可能有点老。所以这次翻译的是stackoverflow中smileyborg解释的获得1.8k的回答：原文链接。  ###使用AutoLayout来动态显示UITableView中Cell的高度 TL;DR:(Too long,Don’t read，太长不看)如果你不想阅读内容，你可以直接跳转到这个github上简单的工程：  iOS 8工程 - 需">
+<meta name="twitter:image" content="http://i.stack.imgur.com/CTUPi.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/08/08/[译]autolayout_uitableView_stackoverflow/"/>
+
+
+
+
+
+  <title>iOS中使用autolayout来进行UITableView的布局(2) | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/08/08/[译]autolayout_uitableView_stackoverflow/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS中使用autolayout来进行UITableView的布局(2)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-08-08T11:52:59+08:00">
+                2016-08-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">programming</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>由于昨天翻译的一篇内容是原作者在2014年写的，可能有点老。所以这次翻译的是stackoverflow中<a href="http://stackoverflow.com/users/796419/smileyborg" target="_blank" rel="external">smileyborg</a>解释的获得1.8k的回答：<a href="http://stackoverflow.com/questions/18746929/using-auto-layout-in-uitableview-for-dynamic-cell-layouts-variable-row-heights" target="_blank" rel="external">原文链接</a>。</p>
+<hr>
+<p>###使用AutoLayout来动态显示UITableView中Cell的高度</p>
+<p><strong>TL;DR:</strong>(Too long,Don’t read，太长不看)如果你不想阅读内容，你可以直接跳转到这个github上简单的工程：</p>
+<ul>
+<li><a href="https://github.com/smileyborg/TableViewCellWithAutoLayoutiOS8" target="_blank" rel="external">iOS 8工程</a> - 需要iOS8以上</li>
+<li><a href="https://github.com/smileyborg/TableViewCellWithAutoLayout" target="_blank" rel="external">iOS 7工程</a> - 需要iOS7+以上</li>
+</ul>
+<p>####概念描述</p>
+<p>最开始的两步与你所开发的iOS的版本号无关</p>
+<p>#####1.设置并添加约束<br>在你的<code>UITableViewCell</code>的子类中，通过约束你的cell的subView从而使得他们有自己的边框，从而撑起这个cell的<strong>contentView</strong>（最主要的是上下边的约束）。</p>
+<p><strong>注意：不要设置cell的subView与cell本身的约束，只能和cell的<code>contentView</code>约束。</strong></p>
+<p>让我们使用内容真正的大小来设置tableViewCell的内容，并通过设置内容在垂直方向上的<em>压缩阻力(content compression resistance)</em>和<em>内容收缩约束(content hugging constraints)</em>来重新加载他的尺寸。（如果对于content Compression Resistance和Content Hugging Constraints有疑惑可以点击：<a href="http://stackoverflow.com/questions/22599069/what-is-the-content-compression-resistance-and-content-hugging-of-a-uiview" target="_blank" rel="external">这个连接</a></p>
+<p>记住，这个方法（指设置压缩阻力和内容收缩约束）是为了能够cell的subView能够在垂直方向上能够与cell相连接，从而当内容“产生压力”的时候他们能够伸展内容的View从而适应他们。就如下面的这个例子中展出的部分约束（不是全部！）：<img src="http://i.stack.imgur.com/CTUPi.png" alt="exampleImage"></p>
+<p>你能够想象，就如例子中一样，当内容在多行的label中不断增加的时候，label将会更好的变宽从而使得使得内容变得更加合适。（当然，为了能够使Cell更好的显示出来，你需要设置正确的约束）</p>
+<p>设置正确的约束是使用AutoLayout动态获得cell高度最困难同时也是最重要的一步。没有这一步，其余的都只是无用功。所以在这一步上面请花费一定的时间。我建议你通过代码来实现约束，这样可以更好的明白你在哪里添加了这些约束，同时对于调试来说，这可以更好的找到错误。通过代码添加约束比通过interface Builder更加方便、有效，特别是通过某些别人已经设置好的API。这里是我所设计、维护、使用的一个<a href="https://github.com/smileyborg/PureLayout" target="_blank" rel="external">第三方库</a>(译者表示：我更喜欢用Masonry和SnapKit)</p>
+<ul>
+<li>如果你在代码中添加了约束，你将至少使用一次<code>updateConstraints</code>方法来设置你的UITableViewCell的subClass。注意：因为<code>updateConstraints</code>在你的代码中将不止一次的被调用，所以不要反复添加一样的约束，通过检查<code>didSetupConstraints</code>函数返回的布尔值(boolean)来确定<code>updateConstraints</code>中包含的内容是否只包含了一次。(你可以在你运行了一次你的约束后，将他设置为YES)。另一方面，如果你有代码来更新已经存在的约束（比如说调整某些约束的常量属性），请将这些更新的代码放在<code>updateConstraints</code>中，但是在检查<code>didSetupConstraints</code>以外。这样你可以在每次运行的时候都调用它。</li>
+</ul>
+<p>#####2.设置TableViewCell的唯一标示符。<br>对于每一个唯一的cell中的约束，使用一个唯一的标示符来设置有这些约束的Cell。另一方面来说，如果你的cell有不止一个的独一无二的layout，每一个唯一的layout都应该有一个他自己的标示符。（这里有一个建议，一般你只有当你的Cell的subViews发生改变或者他们按照不同位置发生排列的时候，才会用新的标示符。）</p>
+<p>比如说，如果你在每个cell中展示每一条email的内容的时候，你可能需要4种展示方式：有主题的邮件，有主题和文章主体的邮件，有主题和照片附件的邮件，有主题、文章主体还有照片附件的邮件。每种展示方式都有自己的不同约束来实现它，所以当你的cell创建并且添加约束的时候，每种不同的cell需要给予特定的标示符。这意味着当你将cell放入缓存池的时候，他们当中已经加入了各自的约束，并且已经设定好了他们的类型。</p>
+<p>注意：由于内容的大小不同，所以cell有着一样的约束可能仍旧有不同的高度。不要因为内容有着不同的大小，却需要设置不同的layout（不同的约束）和计算框架方式不同（通过相同的约束进行解决）而感到迷惑。</p>
+<ul>
+<li>不要将有着完全不同约束的cell添加到同一个缓存池<em>（reuse pool）</em>（比如说使用相同的标示符），同时企图删掉老的约束来重新开始来设置每一个缓寸池中的cell。因为Autolayout的内部不是用来进行大规模的约束变化，如果你这么做的话，你将会看到明显的性能问题。</li>
+</ul>
+<p>####对于iOS 8 - 自行调整大小的cell</p>
+<h5 id="3-使用行高的自动估计"><a href="#3-使用行高的自动估计" class="headerlink" title="3.使用行高的自动估计"></a>3.使用行高的自动估计</h5><p>对于iOS 8 ，苹果公司已经在你使用iOS 8之前内化了大量的工作，为了能够使用这种行高的自动估计，你必须首先设置他的<code>rowHeight</code>这一属性，一般我们把它设置为<code>UITableViewAutomaticDimension</code>。然后你需要设置tableView的<code>estimatedRowHeight</code>来开启行高估计，同时这个属性不能为0，下面是一个例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">self.tableView.rowHeight = UITableViewAutomaticDimension;</div><div class="line">self.tableView.estimatedRowHeight = 44.0; // 设置你cell的均值</div></pre></td></tr></table></figure>
+<p>这是为了在你的cell还没有显示到屏幕上之前，先给予你的tableView中的每一个cell一个临时的估计高度（占位符）。为了得到每一行的准确高度，tableView自动询问每一个cell，他们自己内部基于cell自身固定宽度的内容视图，从而确定自身的<code>contentView</code>的高度（这将基于tableView自己的宽度减去外部的索引或者他的附属视图）和你添加到cell的View和SubView的autolayout的约束。当cell的实际高度被计算出来之后，老的估算高度将会被更新为新的高度，同时它将调整为你所需要的tableView的<code>contentSize</code>和<code>contentOffset</code></p>
+<p>总的来说，你所设置的估算高度不会被真的调用，这只是用来设置tableView中正确大小的滚动指示符，同时在你的cell被显示到屏幕上的时候，这种方法将很好的调整那些不正确的估算值。你应该设置<code>estimatedRowHeight</code>这个tableView中的属性（一般在<code>viewDidLoad</code>或者和他类似的方法中）为行的均高。只有当你的行高产生极端变化（例如相差了一个数量级），你就会发现你的滚动指示符发生“跳动”的时候，你才需要费心去实现<code>tableView:estimatedHeightForRowAtIndexPath</code>方法，从而去做最小的计算，从而返回更加精确的cell的高度值。</p>
+<p>####对于iOS 7 - 自行实现行高的自动调整</p>
+<h5 id="3-实现一个合理的布局从而获得cell的高度"><a href="#3-实现一个合理的布局从而获得cell的高度" class="headerlink" title="3.实现一个合理的布局从而获得cell的高度"></a>3.实现一个合理的布局从而获得cell的高度</h5><p>首先实例化一个不会出现在屏幕上的tableViewCell的例子，<em>这个cell将会被设置一个所有cell都会使用的重用表示符</em>，这个cell将被进行严格的高度计算（不会出现在屏幕上意味着他只是一个属性，同时将不会在<code>tableView:cellForRowAtIndexPath:</code>调用，这意味他不会被渲染到屏幕上）然后，这个cell将会被添加将来显示在tableView中的具体的内容，（比如说文本，图片等等）。</p>
+<p>然后迫使这个cell立即调整他的subView的布局，同时使用UItableViewCell的content的<code>systemLayoutSizeFittingSize:</code>方法来获得这个cell所需要的高度。使用<code>UILayoutFittingCompressedSize</code>来获得用来撑开cell的内容的最小的大小。高度必须靠代理中的<code>tableView:heightForRowAtIndexPath:</code>方法来返回。</p>
+<h5 id="4-使用预设置的行高"><a href="#4-使用预设置的行高" class="headerlink" title="4.使用预设置的行高"></a>4.使用预设置的行高</h5><p>如果你的tableView有多行的内容，你将会autolayout的约束将会使得主线程在第一次加载tableView的时候产生问题，那是因为<code>tableView:heightForRowAtIndexPath:</code>方法将会在每一行第一次被调用的时候。（为了计算滚动指示符正确的大小）</p>
+<p>对于iOS 7，你能够（或者说你绝对应该）在tableView中使用<code>estimatedRowHeight</code>属性，在没有被显示到屏幕上前，这将会给予tableView一个预估的行高（占位符）。然后这个cell在放到屏幕上的时候，每一行的高度将会被计算（通过调用<code>tableView:heightForRowAtIndexPath:</code>方法），同时这个真实高度将替代原有的预估的行高（占位符）。</p>
+<p><strong>//这一段和iOS 8的第三段一模一样</strong><br>总的来说，你所设置的估算高度不会被真的调用，这只是用来设置tableView中正确大小的滚动指示符，同时在你的cell被显示到屏幕上的时候，这种方法将很好的调整那些不正确的估算值。你应该设置<code>estimatedRowHeight</code>这个tableView中的属性（一般在<code>viewDidLoad</code>或者和他类似的方法中）为行的均高。只有当你的行高产生极端变化（例如相差了一个数量级），你就会发现你的滚动指示符发生“跳动”的时候，你才需要费心去实现<code>tableView:estimatedHeightForRowAtIndexPath</code>方法，从而去做最小的计算，从而返回更加精确的cell的高度值。</p>
+<h5 id="5-添加行高缓存"><a href="#5-添加行高缓存" class="headerlink" title="5.添加行高缓存"></a>5.添加行高缓存</h5><p>如果你已经做了以上所有步骤，但是仍旧不能忍受设备因为调用<code>tableView:heightForRowAtIndexPath:</code>方法去计算约束时候显示tableView的缓慢，你可能很不幸的需要缓存cell的高度（这个建议来自于苹果的工程师）。总的想法是通过autolayout来计算第一次约束，然后通过缓存来计算将来需要使用的所有cell的高度。在使用这个方法的时候，你需要清楚的知道缓存中的行高和什么时候缓存中的行高将会发生改变。这将用于当cell的内容发生改变或者一些其他重要的事情发生的时候（比如说用户通过滑块来动态的调整文本的大小时候）</p>
+<h5 id="iOS-7简单的代码实现（基于很多建议）"><a href="#iOS-7简单的代码实现（基于很多建议）" class="headerlink" title="iOS 7简单的代码实现（基于很多建议）"></a>iOS 7简单的代码实现（基于很多建议）</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div></pre></td><td class="code"><pre><div class="line">- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath</div><div class="line">&#123;</div><div class="line">    //设置标示符</div><div class="line">    static NSString *reuseIdentifier = ...;</div><div class="line"></div><div class="line">    //获取缓存池中的cell</div><div class="line">    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier];</div><div class="line"></div><div class="line">    // 设置cell的内容</div><div class="line">    // cell.textLabel.text = someTextForThisCell;</div><div class="line">    // ...</div><div class="line"></div><div class="line">    // 确定约束已经被添加</div><div class="line">    // 或者对约束进行调整</div><div class="line">    // 如果你确定约束已经被设定好，记得更新约束</div><div class="line">    // 更新的方法: [cell setNeedsUpdateConstraints];</div><div class="line">    [cell updateConstraintsIfNeeded];</div><div class="line"></div><div class="line">    // 如果你使用多行的Label,不要忘记正确的使用preferredMaxLayoutWidth</div><div class="line">    // 记得在子类中也进行调用</div><div class="line">    // -[layoutSubviews] 方法. For example:</div><div class="line">    // cell.multiLineLabel.preferredMaxLayoutWidth = CGRectGetWidth(tableView.bounds);</div><div class="line"></div><div class="line">    return cell;</div><div class="line">&#125;</div><div class="line"></div><div class="line">- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath</div><div class="line">&#123;</div><div class="line">    // Determine which reuse identifier should be used for the cell at this</div><div class="line">    // index path.</div><div class="line">    NSString *reuseIdentifier = ...;</div><div class="line"></div><div class="line">    // Use a dictionary of offscreen cells to get a cell for the reuse</div><div class="line">    // identifier, creating a cell and storing it in the dictionary if one</div><div class="line">    // hasn&apos;t already been added for the reuse identifier. WARNING: Don&apos;t</div><div class="line">    // call the table view&apos;s dequeueReusableCellWithIdentifier: method here</div><div class="line">    // because this will result in a memory leak as the cell is created but</div><div class="line">    // never returned from the tableView:cellForRowAtIndexPath: method!</div><div class="line">    UITableViewCell *cell = [self.offscreenCells objectForKey:reuseIdentifier];</div><div class="line">    if (!cell) &#123;</div><div class="line">        cell = [[YourTableViewCellClass alloc] init];</div><div class="line">        [self.offscreenCells setObject:cell forKey:reuseIdentifier];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // Configure the cell with content for the given indexPath, for example:</div><div class="line">    // cell.textLabel.text = someTextForThisCell;</div><div class="line">    // ...</div><div class="line"></div><div class="line">    // Make sure the constraints have been set up for this cell, since it</div><div class="line">    // may have just been created from scratch. Use the following lines,</div><div class="line">    // assuming you are setting up constraints from within the cell&apos;s</div><div class="line">    // updateConstraints method:</div><div class="line">    [cell setNeedsUpdateConstraints];</div><div class="line">    [cell updateConstraintsIfNeeded];</div><div class="line"></div><div class="line">    // Set the width of the cell to match the width of the table view. This</div><div class="line">    // is important so that we&apos;ll get the correct cell height for different</div><div class="line">    // table view widths if the cell&apos;s height depends on its width (due to</div><div class="line">    // multi-line UILabels word wrapping, etc). We don&apos;t need to do this</div><div class="line">    // above in -[tableView:cellForRowAtIndexPath] because it happens</div><div class="line">    // automatically when the cell is used in the table view. Also note,</div><div class="line">    // the final width of the cell may not be the width of the table view in</div><div class="line">    // some cases, for example when a section index is displayed along</div><div class="line">    // the right side of the table view. You must account for the reduced</div><div class="line">    // cell width.</div><div class="line">    cell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth(tableView.bounds), CGRectGetHeight(cell.bounds));</div><div class="line"></div><div class="line">    // Do the layout pass on the cell, which will calculate the frames for</div><div class="line">    // all the views based on the constraints. (Note that you must set the</div><div class="line">    // preferredMaxLayoutWidth on multi-line UILabels inside the</div><div class="line">    // -[layoutSubviews] method of the UITableViewCell subclass, or do it</div><div class="line">    // manually at this point before the below 2 lines!)</div><div class="line">    [cell setNeedsLayout];</div><div class="line">    [cell layoutIfNeeded];</div><div class="line"></div><div class="line">    // Get the actual height required for the cell&apos;s contentView</div><div class="line">    CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;</div><div class="line"></div><div class="line">    // Add an extra point to the height to account for the cell separator,</div><div class="line">    // which is added between the bottom of the cell&apos;s contentView and the</div><div class="line">    // bottom of the table view cell.</div><div class="line">    height += 1.0f;</div><div class="line"></div><div class="line">    return height;</div><div class="line">&#125;</div><div class="line"></div><div class="line">// NOTE: Set the table view&apos;s estimatedRowHeight property instead of</div><div class="line">// implementing the below method, UNLESS you have extreme variability in</div><div class="line">// your row heights and you notice the scroll indicator &quot;jumping&quot;</div><div class="line">// as you scroll.</div><div class="line">- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath</div><div class="line">&#123;</div><div class="line">    // Do the minimal calculations required to be able to return an</div><div class="line">    // estimated row height that&apos;s within an order of magnitude of the</div><div class="line">    // actual height. For example:</div><div class="line">    if ([self isTallCellAtIndexPath:indexPath]) &#123;</div><div class="line">        return 350.0f;</div><div class="line">    &#125; else &#123;</div><div class="line">        return 40.0f;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>####简单的Demo工程</p>
+<ul>
+<li><a href="https://github.com/smileyborg/TableViewCellWithAutoLayoutiOS8" target="_blank" rel="external">iOS 8 工程</a></li>
+<li><a href="https://github.com/smileyborg/TableViewCellWithAutoLayout" target="_blank" rel="external">ios 7 工程</a></li>
+</ul>
+<p>这几个工程完全解决了因为UILabel的情况下tableView需要中cell的高度需要动态调整的问题。</p>
+<p>你可以随时提出任何问题或者你所遇到的问题（你可以在Github上提交你的评论），我将尽力帮助你！</p>
+<p>####Xamarin（C# / .NET）<br>如果你使用Xamarin，可以检出<a href="http://stackoverflow.com/users/5380/kent-boogaart" target="_blank" rel="external">KentBoogaart</a>的一个<a href="https://github.com/kentcb/TableViewCellWithAutoLayout_dotNET" target="_blank" rel="external">简单的工程</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/翻译/" rel="tag"># 翻译</a>
+          
+            <a href="/tags/AutoLayout/" rel="tag"># AutoLayout</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/21/ios多线程开发——nsthread的简单运用/" rel="next" title="iOS多线程开发——NSThread的简单运用">
+                <i class="fa fa-chevron-left"></i> iOS多线程开发——NSThread的简单运用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/08/08/[译]10条在开发基于React Native开发中学到的事/" rel="prev" title="10条在开发基于React Native开发中学到的事">
+                10条在开发基于React Native开发中学到的事 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#3-使用行高的自动估计"><span class="nav-number">1.</span> <span class="nav-text">3.使用行高的自动估计</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-实现一个合理的布局从而获得cell的高度"><span class="nav-number">2.</span> <span class="nav-text">3.实现一个合理的布局从而获得cell的高度</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#4-使用预设置的行高"><span class="nav-number">3.</span> <span class="nav-text">4.使用预设置的行高</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#5-添加行高缓存"><span class="nav-number">4.</span> <span class="nav-text">5.添加行高缓存</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#iOS-7简单的代码实现（基于很多建议）"><span class="nav-number">5.</span> <span class="nav-text">iOS 7简单的代码实现（基于很多建议）</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,712 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="iOS," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="列出开发中常见bug，方便以后review  Linker command failed with exit code 1 (use -v to see invocation) 由于link出现问题   原因：submodule和pod同时存在，导致编译器不知道去哪个地方进行调用。解决方法：删除其中一个，个人建议删除submodule，然后用command+option+shift+k，删除所有已">
+<meta name="keywords" content="iOS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS tips">
+<meta property="og:url" content="http://yoursite.com/2016/12/27/iOS-tips/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="列出开发中常见bug，方便以后review  Linker command failed with exit code 1 (use -v to see invocation) 由于link出现问题   原因：submodule和pod同时存在，导致编译器不知道去哪个地方进行调用。解决方法：删除其中一个，个人建议删除submodule，然后用command+option+shift+k，删除所有已">
+<meta property="og:updated_time" content="2016-12-30T09:48:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS tips">
+<meta name="twitter:description" content="列出开发中常见bug，方便以后review  Linker command failed with exit code 1 (use -v to see invocation) 由于link出现问题   原因：submodule和pod同时存在，导致编译器不知道去哪个地方进行调用。解决方法：删除其中一个，个人建议删除submodule，然后用command+option+shift+k，删除所有已">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/27/iOS-tips/"/>
+
+
+
+
+
+  <title>iOS tips | Hexo</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/27/iOS-tips/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">iOS tips</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-27T22:07:34+08:00">
+                2016-12-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>列出开发中常见bug，方便以后review</p>
+<ol>
+<li><code>Linker command failed with exit code 1 (use -v to see invocation)</code> 由于link出现问题</li>
+</ol>
+<ul>
+<li>原因：submodule和pod同时存在，导致编译器不知道去哪个地方进行调用。解决方法：删除其中一个，个人建议删除submodule，然后用command+option+shift+k，删除所有已经build文件，然后重新build，因为更加简单。</li>
+<li>根据提醒，文件重复，原因是文件产生的文件名冲突，导致产生的.a之类的文件冲突。</li>
+</ul>
+<ol>
+<li>ImageNamed会进行缓存，不仅仅从Assets中读取，也从路径中读取，不需要加2x等后缀，contentOfFile:需要完整路径，需要加上2x后缀。</li>
+<li>使用newView.layer.shouldRasterize = YES虽然使用栅栏化，但是因为栅栏化导致图片变得模糊，同时模糊的对象除了本身还有其包含的UIView的子类。所以最好的建议在大量使用圆角的时候，如果图片小，可以使用shouldRasterize，否则最好使用CAShapeLayer进行重新绘制。虽然还是会调用上下文，但是因为是用户设置好告诉系统需要调用，所以减少卡顿效果</li>
+<li>tableView &amp; collectionView 的 cell 的size 都是通过计算获得，苹果方面禁止对 cell 直接使用使用 autolayout。</li>
+<li>cell 中的 imageView 的 superView 是 contentView ，而 contentView 的superView 才是 Cell。所以当内容插入的时候，需要将内容插入到 contentView 而不是直接插入到 cell 当中，否则在调试 UI 的过程中，控件的状态像是 存在于 Layer 上面一样。</li>
+<li>对于懒加载的使用情况。主要是为了应对一个 VC 下面有多种的 View 的现实情况，而不同的 View 的出现概率不一定，所以为了节省空间而使用懒加载。</li>
+</ol>
+<ul>
+<li>缺点：但是因为懒加载重写了 getter 方法，如果在书写的过程中不按照规范书写，导致返回值发生变化。这样父类调用子类的情况可能没有问题，但是父类调用子类的子类，就可能会出现问题。</li>
+<li>需要注意：在只需要加载一次的情况下，就直接创建对象并赋值。</li>
+</ul>
+<ol>
+<li>尽可能使用全称来进行描述变量，比如说：使用<code>button</code>而不是<code>btn</code>。</li>
+<li>对于pod 1.0以上版本在bundle内直接使用<code>NSLocalizedString(arg1,arg2)</code>可能会无法读取，所以取而代之用<code>NSLocalizedStringFromTableInBundle(@&quot;goback&quot;, nil, bundle, nil);</code>进行获取相关内容的<strong>i18n</strong>。</li>
+<li>对于alias命令使用.bash_profile进行转化（对于单个用户），/etc/podfile 对全体用户进行转化。</li>
+<li>对于不同类型的 asset 转换成 CGImage（图片质量从高到低分别是）：</li>
+</ol>
+<ul>
+<li>[UIImage imageWithCGImage:[[asset defaultRepresentation] fullResolutionImage]]，直接获得原图，不经过相册自带修改的信息，非 PNG 格式</li>
+<li>[UIImage imageWithCGImage:[[asset defaultRepresentation] fullScreenImage]]，获得缩略图，经过相册自带修改信息的处理<ul>
+<li>[UIImage imageWithCGImage:[asset aspectRatioThumbnail]]，获得分辨率约为 380 * 250 的图片</li>
+<li>[UIImage imageWithCGImage:[asset thumbnail]] ，获得 125 * 125的缩略图。</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>对于正确使用ssh的添加方法：</li>
+</ol>
+<ul>
+<li>ssh -T git@git.caimi-inc.com 对git进行测试判断是否正常</li>
+<li>ssh-keygen -t rss -C “注释名“ 创建一个名字<ul>
+<li>里面的创建的名字不需要使用路径名字，直接输入文件名即可</li>
+<li>创建完后加入最后ssh-add privateKeyName，然后上传即可</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li><p>podspace 的基本情况：通过 ruby 书写。明白了版本号的区别（语义化版本），详见网页地址</p>
+</li>
+<li><p>就算是系统内部的函数也存在循环引用的情况，<code>[[NSNotificationCenter defaultCenter] addObserverForName:&lt;#(nullable NSString *)#&gt; object:&lt;#(nullable id)#&gt; queue:&lt;#(nullable NSOperationQueue *)#&gt; usingBlock:&lt;#^(NSNotification * _Nonnull note)block#&gt;]</code> 方法因为返回一个observer对象会导致self，持有这个对象，从而导致环的出现。</p>
+</li>
+<li><p>brew install imagemagick。图片转换，使用方法: convert -resize 50% sourcePath aimPath;</p>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">dyld: Library not loaded: @rpath/XCTest.framework/XCTest**</div><div class="line"></div><div class="line">**  Referenced from: /Users/zkhcreator/Library/Developer/CoreSimulator/Devices/475FB229-B4DF-41AA-B3B9-263F47E7FEA2/data/Containers/Bundle/Application/6670C0B5-2E68-4F43-B0AD-5C78ABD3D78E/WacApp.app/WacApp**</div><div class="line"></div><div class="line">**  Reason: image not found**</div><div class="line"></div><div class="line">解决方法：在对应工程文件中Build Phases中高的Link Binary With Libraries中添加XCTest.framework，由于在这个工程文件中不存在对应内容，所以status设置为optional。</div></pre></td></tr></table></figure>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/25/计算机网络基础/" rel="next" title="计算机网络基础">
+                <i class="fa fa-chevron-left"></i> 计算机网络基础
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/12/28/使用coocapods1-1-1无法成功创建pod工程文件的解决方法/" rel="prev" title="使用coocapods1.1.1无法成功创建pod工程文件的解决方法">
+                使用coocapods1.1.1无法成功创建pod工程文件的解决方法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="John Doe" />
+          <p class="site-author-name" itemprop="name">John Doe</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-name">categories</span>
+              
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">John Doe</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
