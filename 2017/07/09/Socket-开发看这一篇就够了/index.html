@@ -93,13 +93,18 @@
 
 
 
+<meta name="description" content="之所以有这篇文章是因为，毕设啊毕设。怼了大半个月。恶补了计算机网络相关的知识和相关的内容，现在已经过去快一个月了，再不记下来的话，估计就真的会忘记。况且 Blog 已经那么久不更新了，心思全在玩上了┑(￣Д ￣)┍。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Socket 开发看这一篇就够了">
 <meta property="og:url" content="https://zkhcreator.github.io/2017/07/09/Socket-开发看这一篇就够了/index.html">
 <meta property="og:site_name" content="zkhCreator Blog">
-<meta property="og:updated_time" content="2017-07-09T12:11:14.000Z">
+<meta property="og:description" content="之所以有这篇文章是因为，毕设啊毕设。怼了大半个月。恶补了计算机网络相关的知识和相关的内容，现在已经过去快一个月了，再不记下来的话，估计就真的会忘记。况且 Blog 已经那么久不更新了，心思全在玩上了┑(￣Д ￣)┍。">
+<meta property="og:image" content="http://image.jiantuku.com/17-7-9/44586640.jpg?attname=d000baa1cd11728b4564....jpeg&e=1499613610&token=el7kgPgYzpJoB23jrChWJ2gV3HpRl0VCzFn8rKKv:FH_dPDAqVS-cwd4erywXfcZGKYM=">
+<meta property="og:updated_time" content="2017-07-14T02:56:01.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Socket 开发看这一篇就够了">
+<meta name="twitter:description" content="之所以有这篇文章是因为，毕设啊毕设。怼了大半个月。恶补了计算机网络相关的知识和相关的内容，现在已经过去快一个月了，再不记下来的话，估计就真的会忘记。况且 Blog 已经那么久不更新了，心思全在玩上了┑(￣Д ￣)┍。">
+<meta name="twitter:image" content="http://image.jiantuku.com/17-7-9/44586640.jpg?attname=d000baa1cd11728b4564....jpeg&e=1499613610&token=el7kgPgYzpJoB23jrChWJ2gV3HpRl0VCzFn8rKKv:FH_dPDAqVS-cwd4erywXfcZGKYM=">
 
 
 
@@ -257,7 +262,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zkhCreator">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/source/images/avatar.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -316,7 +321,60 @@
       
 
       
-        <a id="more"></a>
+        <p>之所以有这篇文章是因为，毕设啊毕设。怼了大半个月。恶补了计算机网络相关的知识和相关的内容，现在已经过去快一个月了，再不记下来的话，估计就真的会忘记。况且 Blog 已经那么久不更新了，心思全在玩上了┑(￣Д ￣)┍。</p>
+<a id="more"></a>
+<p>Don’t BB show me the Code.So here is the <a href="https://github.com/zkhCreator/Socks5Proxy" target="_blank" rel="external">url of code</a></p>
+<h1 id="Socket-究竟是个什么东西"><a href="#Socket-究竟是个什么东西" class="headerlink" title="Socket 究竟是个什么东西"></a>Socket 究竟是个什么东西</h1><p>Socket 俗称 套接字。嗯。套接字。Socket 是对 TCP/IP 协议族的一种封装，是应用层与TCP/IP协议族通信的中间软件抽象层。</p>
+<p>画外音：你特么倒是说人话啊！！(╯‵□′)╯︵┻━</p>
+<p>如果你想简单的理解点：那么我告诉你实际上就像你喝特仑苏的时候（喂喂喂，特仑苏记得给广告费啊），我们都需要用习惯在牛奶瓶上面戳个洞。如果我们把牛奶比作我们的电脑，那么被戳破的洞就是端口 (Port) ，透明的管子就可以作为 Socket，而白色的管子，也就是我们伸到嘴里面的就是对外的数据传输链路了。（怎么突然间就污了起来，司机，我要下车！！！</p>
+<p>如果你想要更加深入的理解。那么你需要了解 OSI 七层协议和 TCP/IP 五层网络架构。你说你不懂？大丈夫。丢你一份<a href="https://zkhcreator.github.io/2016/12/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80/">计算机网络的基础知识</a>只要你搜关键字就可以快速定位到你想要的知识点了。</p>
+<p>既然你已经知道了这两个点，那我们就可以愉快的交流了。实际上 Socket 可以理解为在 TCP/IP 之上，在应用层以下，处于两者之间。位于会话层(OSI 的 Session 层)，你可以在 Socket 上面实现你想要实现的自定义协议。同时因为这东西介于应用层和传输层之间，用户可以使用这一层进行数据的中转，从而方便对于数据的二次处理。</p>
+<p>既然能中转数据，那就很有用了。你可以根据你自己的需求完成数据的各种添加和删除，或者某些协议的实现了。</p>
+<p>画外音：那这么厉害的东西要怎么使用呢？</p>
+<h1 id="Socket使用"><a href="#Socket使用" class="headerlink" title="Socket使用"></a>Socket使用</h1><p>因为 Socket 这个概念始于 Linux，所以很多语言都可以实现。（强行扯到 Linux)</p>
+<p>但是无论用什么语言进行处理，但是他的实现方式都是一样的。一般各种语言中的Socket 都会提供下面几个 API：</p>
+<ul>
+<li>socket() 创建套接字</li>
+<li>bind() 分配套接字地址</li>
+<li>listen() 等待连接请求</li>
+<li>accept() 允许连接请求</li>
+<li>read()/write() 数据交换</li>
+<li>close() 关闭连接</li>
+</ul>
+<p>首先我们在我们本地使用 <code>socket()</code> 创建一个套接字，然后用 <code>bind()</code> 将它绑定到对应的端口。然后将 <code>listen()</code> 接口开始监听对应的端口，然后我们调用<code>accept()</code>函数进行接收。然后调用 <code>read()</code> 读取远端的数据。然后再调用 <code>write()</code> 来进行数据的写入。最后等到所有的内容结束后再次调用 <code>close()</code>关闭对应的 socket。调用顺序去如下：</p>
+<p><img src="http://image.jiantuku.com/17-7-9/44586640.jpg?attname=d000baa1cd11728b4564....jpeg&amp;e=1499613610&amp;token=el7kgPgYzpJoB23jrChWJ2gV3HpRl0VCzFn8rKKv:FH_dPDAqVS-cwd4erywXfcZGKYM=" alt="link"></p>
+<p>当然，因为 Socket 是最底层的，作为一个 iOS 开发，苹果提供给我们的接口都是使用 C 的 API，这对于快速编码很不友好。所以 <code>CocoaAsyncSocket</code> 应运而生。我们可以通过这个三方库快速产出一个我们想要的 App。</p>
+<h1 id="SOCKS-5-的实现-——-Socket-的具体实现"><a href="#SOCKS-5-的实现-——-Socket-的具体实现" class="headerlink" title="SOCKS 5 的实现 —— Socket 的具体实现"></a>SOCKS 5 的实现 —— Socket 的具体实现</h1><p>为了更有目的性的实现 SOCKS 5 协议的App。所以 Demo 中我们就通过使用 <code>CocoaAsyncSocket</code> 来完成一个简单的代理软件。</p>
+<p>关于如何使用 <code>CocoaAsyncSocket</code> 这个三方库，可以直接看他的源码，他通过 delegate，对所有 Socket 接收信息的情况进行回调。方便使用方进行调用，而且他的命名方式十分清楚，所以基本上一看就知道什么时候调用。</p>
+<h2 id="什么是SOCKS-5协议"><a href="#什么是SOCKS-5协议" class="headerlink" title="什么是SOCKS 5协议"></a>什么是SOCKS 5协议</h2><p>SOCKS 5 可能大家会有点陌生，但是既然你们能看到这篇文章，那么 SS 应该是不陌生的。我们就从 SS 来描述。SS 是 基于 SOCKS 5 协议，再在上面进行一层封装而形成的一个协议。你可以把 SS 理解为 Socks 5 的一个进化版。那么 SOCKS 5 能做什么我想大家心里也有数了。</p>
+<p></p>
+<blockquote>
+<p>那么这个东西具体是怎么实现的呢？</p>
+</blockquote>
+<p>协议既然称作为协议，那么也就是两端约定俗称的一个东西。就像你说中文，我也说中文。这样我们默认交流的时候，我们俩都说中文，我们彼此都能明白彼此想表达啥事情。不仅仅是 SOCKS 协议，包括 TCP/IP 协议，HTTP 协议……而在网路协议中，每一层我们都可以看成通过数据流（也就是字节码）进行描述。</p>
+<p>那么具体要怎么描述 Socks 5 呢？根据 <a href="https://tools.ietf.org/html/rfc1928" target="_blank" rel="external">RFC 1928 规范</a>我们可以了解到。</p>
+<p>对于 TCP 协议的请求如下：</p>
+<ol>
+<li>尝试与服务器的 1080 接口进行tcp连接。</li>
+<li>向服务器发送 05 00 01。（第一位为 SOCKS 版本号，第二位为认证方式，第三位代表第二位的长度）</li>
+<li>服务端接收了客户端的请求，然后对请求进行解析，根据第三位查看第二位是否被支持，如果支持，那么返回 05 00，第一位为 SOCKS 版本，第二位为接下去接收认证的方式。</li>
+<li>如果第二位为0 ，那么直接开始进行请求。否则进行身份验证。</li>
+<li>由于身份验证方式有多重，在此不再赘述。</li>
+<li>当完成了验证之后，客户端发送一个需要请求的目标地址的报头，报头包含了<code>版本号</code>，<code>连接方式（是Connect还是Bind）</code>，<code>请求地址类型（ipv4 还是 ipv6 还是域名的形式）``请求的地址（根据类型决定）</code>,<code>请求的端口</code></li>
+<li>当服务器获得了之后，尝试对目的服务器进行请求，请求结束返回对应的请求报文。报文包含了<code>请求头</code>，<code>请求情况（是否成功链接)</code>，<code>绑定的服务器和端口（如果前面是需要进行绑定的情况）</code>。</li>
+<li>如果连接成功就可以进行数据的传输。剩下的和协议就没有关系了。</li>
+</ol>
+<p>对于 UDP 协议的请求与 TCP 相似就是在完成发送验证之后，在发送目标地址的请求过程中，连接方式UDP，然后开 UDP 独有的设置：</p>
+<ol>
+<li>同时在服务器端接收到 UDP 请求。<ul>
+<li>如果不行，那么不进行任何操作。</li>
+<li>如果可行，那么在服务器新开一个接口，然后在回复的报文中带上创建的端口号。</li>
+</ul>
+</li>
+<li>根据客户端发过来的请求，根据请求地址整合出一个请求列表，从而方便将从远端收到的内容返回给对应的服务器。</li>
+<li>请求里面一般为 00 00 00 01 70 5F F0 3C  1F 40 +实体数据。00 00 00 01（表示地址类型） 之后的为IP地址 + 端口号。00 00 00 03(表示域名地址)</li>
+</ol>
+
       
     </div>
 
@@ -361,6 +419,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/09/日本游记/" rel="prev" title="日本游记">
+                日本游记 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -407,11 +469,20 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/images/avatar.gif"
+               src="/source/images/avatar.jpg"
                alt="zkhCreator" />
           <p class="site-author-name" itemprop="name">zkhCreator</p>
            
@@ -423,7 +494,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -445,7 +516,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -470,6 +541,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Socket-究竟是个什么东西"><span class="nav-number">1.</span> <span class="nav-text">Socket 究竟是个什么东西</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Socket使用"><span class="nav-number">2.</span> <span class="nav-text">Socket使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SOCKS-5-的实现-——-Socket-的具体实现"><span class="nav-number">3.</span> <span class="nav-text">SOCKS 5 的实现 —— Socket 的具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是SOCKS-5协议"><span class="nav-number">3.1.</span> <span class="nav-text">什么是SOCKS 5协议</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
